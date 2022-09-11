@@ -1,14 +1,28 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { topStories } from "../queries/hn/topStories";
 import { useQuery } from "@tanstack/react-query";
+import { search, story, topStories } from "../queries/hn";
 
 export default function Index() {
-  const query = useQuery(["topStories"], topStories);
+  const topStoriesQuery = useQuery(["topStories"], topStories);
+  const storyQuery = useQuery(["story"], () => story(5218288));
+  const searchQuery = useQuery(["search"], () => search({ query: "react" }));
 
   return (
     <View style={styles.container}>
-      {query.data?.map((el)=><Text>{el.title}</Text>)}
+      {storyQuery.data && <Text>{storyQuery.data.title}</Text>}
+
+      <View style={{ height: 60 }} />
+      {searchQuery.data?.hits?.slice(0,5).map((el) => (
+        <Text key={el.objectID}>{el.title}</Text>
+      ))}
+
+      <View style={{ height: 60 }} />
+
+
+      {topStoriesQuery.data?.slice(0,5).map((el) => (
+        <Text key={el.id}>{el.title}</Text>
+      ))}
     </View>
   );
 }

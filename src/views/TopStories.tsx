@@ -2,7 +2,6 @@ import React from "react";
 import {
   ScrollView,
   StatusBar,
-  Text,
   TouchableHighlight,
   TouchableOpacity,
   View,
@@ -12,6 +11,7 @@ import { topStories } from "../queries/hn";
 import { date } from "../utils/date";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTailwind } from "tailwind-rn/dist";
+import StyledText from "../components/StyledText";
 
 const StoryItem = (props: {
   navigation: any;
@@ -26,22 +26,30 @@ const StoryItem = (props: {
 }) => {
   const tw = useTailwind();
   return (
-    <View key={props.data.id} style={tw("p-2")}>
-      <TouchableOpacity onPress={() => props.navigation.navigate("Story")}>
-        <Text style={tw("text-2xl text-white")}>{props.data.title}</Text>
-        <Text style={tw("text-xs text-white")}>
-          {props.data.author} ({props.data.score})
-        </Text>
+    <TouchableHighlight
+      key={props.data.id}
+      style={tw("p-2")}
+      activeOpacity={0.6}
+      onPress={() => props.navigation.navigate("Story", { storyId: props.data.id })}
+    >
+      <View >
+        <StyledText classNames="text-2xl" text={props.data.title} />
+        <StyledText
+          classNames="text-xs"
+          text={`${props.data.author} (${props.data.score})`}
+        />
         <View style={tw("flex flex-row justify-between")}>
-          <Text style={tw("text-white text-sm font-bold")}>
-            {props.data.comments} comments
-          </Text>
-          <Text style={tw("text-white text-sm font-bold")}>
-            {date(props.data.createdAt)}
-          </Text>
+          <StyledText
+            classNames="text-sm font-bold"
+            text={`${props.data.comments} comments`}
+          />
+          <StyledText
+            classNames="text-sm font-bold"
+            text={date(props.data.createdAt)}
+          />
         </View>
-      </TouchableOpacity>
-    </View>
+      </View>
+    </TouchableHighlight>
   );
 };
 
@@ -49,8 +57,21 @@ const TopStoriesView = (props: { navigation: any }) => {
   const tw = useTailwind();
   const { data, isLoading, isError } = useQuery(["topStories"], topStories);
 
-  if (isLoading) return <Text>Loading...</Text>;
-  if (isError) return <Text>Error</Text>;
+  if (isLoading)
+    return (
+      <View style={tw("flex-1 grow justify-center items-center")}>
+        <StyledText
+          classNames="text-lg flex-1 justify-center items-center"
+          text="Loading..."
+        />
+      </View>
+    );
+  if (isError)
+    return (
+      <View>
+        <StyledText classNames="text-2xl" text="Erro" />
+      </View>
+    );
 
   return (
     <View>
@@ -75,13 +96,12 @@ const TopStoriesView = (props: { navigation: any }) => {
 };
 export default function TopStories(props: { navigation: any }) {
   const tw = useTailwind();
-
   return (
     <SafeAreaView>
       <StatusBar />
-      <View style={tw("bg-black")}>
+      <ScrollView style={tw("bg-black")}>
         <TopStoriesView {...props} />
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

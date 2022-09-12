@@ -5,6 +5,8 @@ import { topStories } from "../queries/hn";
 import { date } from "../utils/date";
 import { useFonts } from "expo-font";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useTailwind } from "tailwind-rn/dist";
+import StyledText from "../components/StyledText";
 
 const StoryItem = ({
   id,
@@ -66,11 +68,13 @@ const StoryView = () => {
   );
 };
 
-export default function Story({ navigation }: { navigation: any }) {
+export default function Story(props: { navigation: any, route:any }) {
+  const tw = useTailwind();
   return (
     <SafeAreaView>
-      <ScrollView>
-        <StoryView />
+      <StatusBar />
+      <ScrollView style={tw("bg-black")}>
+        <StyledText text={props.route.params.storyId} />
       </ScrollView>
     </SafeAreaView>
   );

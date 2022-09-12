@@ -43,11 +43,7 @@ const CommentItem = ({
     <View style={tw("flex flex-row mt-2")}>
       <View style={tw(`mt-[0.3rem] ${color()}`)} />
       <View>
-        <RenderHtml
-          contentWidth={width}
-          source={{ html: text }}
-          baseStyle={{ color: "white" }}
-        />
+        <RenderHtml source={{ html: text }} baseStyle={{ color: "white"  }} contentWidth={width*((10-_level)/100)} />
         <View style={tw("flex flex-row justify-between")}>
           <StyledText text={author} classNames="opacity-10" />
           <StyledText text={date(created_at)} />
@@ -93,12 +89,25 @@ const Toolbar = ({ id, title, url }: StoryWithContent) => {
 };
 
 const StoryView = (props: { id: number; title: string; comments: number }) => {
+  const tw = useTailwind();
   const { data, isLoading, isError } = useQuery(["story", props.id], () =>
     story(props.id)
   );
-
-  if (isLoading) return <Text>Loading...</Text>;
-  if (isError) return <Text>Error</Text>;
+  if (isLoading)
+    return (
+      <View style={tw("flex-1 grow justify-center items-center")}>
+        <StyledText
+          classNames="text-lg flex-1 justify-center items-center"
+          text="Loading..."
+        />
+      </View>
+    );
+  if (isError)
+    return (
+      <View>
+        <StyledText classNames="text-2xl" text="Erro" />
+      </View>
+    );
 
   return (
     <>

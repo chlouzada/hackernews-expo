@@ -46,6 +46,11 @@
 			"alignItems": "center"
 		}
 	},
+	"justify-end": {
+		"style": {
+			"justifyContent": "flex-end"
+		}
+	},
 	"justify-center": {
 		"style": {
 			"justifyContent": "center"
@@ -108,6 +113,11 @@
 			"paddingRight": 8,
 			"paddingBottom": 8,
 			"paddingLeft": 8
+		}
+	},
+	"text-end": {
+		"style": {
+			"textAlign": "end"
 		}
 	},
 	"text-2xl": {

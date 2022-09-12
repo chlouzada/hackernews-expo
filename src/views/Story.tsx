@@ -1,10 +1,11 @@
 import React from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, StatusBar, Text, View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { topStories } from "../queries/hn";
 import { styled } from "nativewind";
 import { date } from "../utils/date";
 import { useFonts } from "expo-font";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const StyledScrollView = styled(ScrollView);
 const StyledText = styled(Text);
@@ -32,9 +33,7 @@ const StoryItem = ({
         <StyledText className="text-white font-bold text-lg">
           {title}
         </StyledText>
-        <StyledText
-          className="text-xs text-white"
-        >
+        <StyledText className="text-xs text-white">
           {author} ({score})
         </StyledText>
         <StyledView className="flex flex-row justify-between text-sm font-bold">
@@ -47,7 +46,7 @@ const StoryItem = ({
   );
 };
 
-const StoriesView = () => {
+const StoryView = () => {
   const { data, isLoading, isError } = useQuery(["topStories"], topStories);
 
   if (isLoading) return <StyledText>Loading...</StyledText>;
@@ -72,10 +71,12 @@ const StoriesView = () => {
   );
 };
 
-export default function Index() {
+export default function Story({ navigation }: { navigation: any }) {
   return (
-    <StyledScrollView className="bg-black">
-      <StoriesView />
-    </StyledScrollView>
+    <SafeAreaView>
+      <StyledScrollView className="bg-black">
+        <StoryView />
+      </StyledScrollView>
+    </SafeAreaView>
   );
 }

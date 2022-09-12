@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, ScrollView, StatusBar, Text, View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { story, topStories } from "../queries/hn";
@@ -26,7 +26,7 @@ const CommentItem = ({
   if (!text) return null;
 
   const color = () => {
-    if (_level === -1) return;
+    if (_level === -1) return "";
     const n = _level % 4;
     const style = "ml-[0.1rem] mr-[0.5rem] p-[2px] rounded ";
     if (n === 0) return `${style} bg-blue-400`;
@@ -45,7 +45,7 @@ const CommentItem = ({
       <View>
         <RenderHtml contentWidth={width} source={{ html: text }} baseStyle={{color:"white"}}/>
         <View style={tw("flex flex-row justify-between")}>
-          <StyledText text={author} />
+          <StyledText text={author} classNames="opacity-10" />
           <StyledText text={date(created_at)} />
         </View>
         {sortedChildren.map((child) => (
@@ -88,33 +88,40 @@ const Toolbar = ({ id, title, url }: StoryWithContent) => {
   );
 };
 
-const StoryView = (props: { storyId: number }) => {
-  const { data, isLoading, isError } = useQuery(["story", props.storyId], () =>
-    story(props.storyId)
+const StoryView = (props: { id: number, title:string }) => {
+  const { data, isLoading, isError } = useQuery(["story", props.id], () =>
+    story(props.id)
   );
 
   if (isLoading) return <Text>Loading...</Text>;
   if (isError) return <Text>Error</Text>;
 
   return (
-    <View>
+    <>
       <StoryItem {...data} />
       {/* <Toolbar {...data} /> */}
       <StyledText text="Comments" classNames="text-lg font-bold" />
       {data.children.map((child) => (
         <CommentItem key={child.id} {...child} />
       ))}
-    </View>
+    </>
   );
 };
 
 export default function Story(props: { navigation: any; route: any }) {
   const tw = useTailwind();
+
+  // update header title with text
+  useEffect (() => {
+    props.navigation.setOptions({  });
+  }, []);
+  
+
   return (
     <SafeAreaView>
       <StatusBar />
       <ScrollView style={tw("bg-black p-2")}>
-        <StoryView storyId={props.route.params.storyId} />
+        <StoryView id={props.route.params.id} title={ props.route.params.title}  />
       </ScrollView>
     </SafeAreaView>
   );

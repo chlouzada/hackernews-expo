@@ -16,7 +16,12 @@ export default function App() {
       {/* @ts-ignore */}
       <TailwindProvider utilities={utilities}>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Top Stories">
+          <Stack.Navigator
+            initialRouteName="Top Stories"
+            screenOptions={{
+              headerShown: false,
+            }}
+          >
             <Stack.Screen name="Top Stories" component={TopStories} />
             <Stack.Screen name="Story" component={Story} />
           </Stack.Navigator>

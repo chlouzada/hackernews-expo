@@ -32,13 +32,13 @@ const StoryItem = (props: {
       style={tw("p-2")}
       activeOpacity={0.6}
       onPress={() =>
-        props.navigation.navigate("Story", { id: props.data.id, title: props.data.title })
+        props.navigation.navigate("Story", { id: props.data.id, title: props.data.title,comments: props.data.comments })
       }
     >
       <View>
         <StyledText classNames="text-2xl" text={props.data.title} />
         <StyledText
-          classNames="text-xs text-gray-100 text-gray-200 text-gray-300 text-gray-300 opacity-50"
+          classNames="text-xs opacity-40"
           text={`${props.data.author} (${props.data.score})`}
         />
         <View style={tw("flex flex-row justify-between")}>

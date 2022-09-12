@@ -2,31 +2,16 @@
 //   dateStyle: "short",
 // });
 
+import moment from "moment";
+
 // const relativeFormatter = new Intl.RelativeTimeFormat(undefined);
 
 export const date = (str: string) => {
-  return str
-  // const now = new Date();
-  // const date = new Date(str);
-  // const diff = now.getTime() - date.getTime();
+  // const now = moment();
+  const date = moment(str);
+  // const diff = now.diff(date, "milliseconds");
 
-  // // now today 
-  // if (diff > 1000 * 60 * 60 * 24) {
-  //   return formatter.format(date); 
-  // }
+  // if (diff > 1000 * 60 * 60 * 24) return date.format("YYYY-MM-DD - HH:mm");
 
-
-  // // if diff in hours
-  // if (diff > 1000 * 60 * 60)
-  //   return relativeFormatter.format(
-  //     -Math.floor(diff / (1000 * 60 * 60)),
-  //     "hour"
-  //   );
-
-  // // if diff in minutes
-  // if (diff > 1000 * 60)
-  //   return relativeFormatter.format(-Math.floor(diff / (1000 * 60)), "minute");
-
-  // // if diff in seconds
-  // return relativeFormatter.format(-Math.floor(diff / 1000), "second");
+  return date.fromNow();
 };

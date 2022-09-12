@@ -43,7 +43,11 @@ const CommentItem = ({
     <View style={tw("flex flex-row mt-2")}>
       <View style={tw(`mt-[0.3rem] ${color()}`)} />
       <View>
-        <RenderHtml contentWidth={width} source={{ html: text }} baseStyle={{color:"white"}}/>
+        <RenderHtml
+          contentWidth={width}
+          source={{ html: text }}
+          baseStyle={{ color: "white" }}
+        />
         <View style={tw("flex flex-row justify-between")}>
           <StyledText text={author} classNames="opacity-10" />
           <StyledText text={date(created_at)} />
@@ -88,7 +92,7 @@ const Toolbar = ({ id, title, url }: StoryWithContent) => {
   );
 };
 
-const StoryView = (props: { id: number, title:string }) => {
+const StoryView = (props: { id: number; title: string; comments: number }) => {
   const { data, isLoading, isError } = useQuery(["story", props.id], () =>
     story(props.id)
   );
@@ -112,16 +116,15 @@ export default function Story(props: { navigation: any; route: any }) {
   const tw = useTailwind();
 
   // update header title with text
-  useEffect (() => {
-    props.navigation.setOptions({  });
+  useEffect(() => {
+    props.navigation.setOptions({});
   }, []);
-  
 
   return (
     <SafeAreaView>
       <StatusBar />
       <ScrollView style={tw("bg-black p-2")}>
-        <StoryView id={props.route.params.id} title={ props.route.params.title}  />
+        <StoryView {...props.route.params} />
       </ScrollView>
     </SafeAreaView>
   );

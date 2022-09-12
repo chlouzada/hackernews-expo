@@ -2,14 +2,9 @@ import React from "react";
 import { ScrollView, StatusBar, Text, View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { topStories } from "../queries/hn";
-import { styled } from "nativewind";
 import { date } from "../utils/date";
 import { useFonts } from "expo-font";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-const StyledScrollView = styled(ScrollView);
-const StyledText = styled(Text);
-const StyledView = styled(View);
 
 const StoryItem = ({
   id,
@@ -26,36 +21,36 @@ const StoryItem = ({
   comments: number;
   createdAt: string;
 }) => {
-  return (
-    <StyledView key={id} className="p-2">
-      {/* <Link href={`/story/${id}`}> */}
-      <StyledView>
-        <StyledText className="text-white font-bold text-lg">
-          {title}
-        </StyledText>
-        <StyledText className="text-xs text-white">
-          {author} ({score})
-        </StyledText>
-        <StyledView className="flex flex-row justify-between text-sm font-bold">
-          <StyledText className="text-white">{comments} comments</StyledText>
-          <StyledText className="text-white">{date(createdAt)}</StyledText>
-        </StyledView>
-      </StyledView>
-      {/* </Link> */}
-    </StyledView>
-  );
+  // return (
+  //   <View key={id} className="p-2">
+  //     {/* <Link href={`/story/${id}`}> */}
+  //     <View>
+  //       <Text className="text-white font-bold text-lg">
+  //         {title}
+  //       </Text>
+  //       <Text className="text-xs text-white">
+  //         {author} ({score})
+  //       </Text>
+  //       <View className="flex flex-row justify-between text-sm font-bold">
+  //         <Text className="text-white">{comments} comments</Text>
+  //         <Text className="text-white">{date(createdAt)}</Text>
+  //       </View>
+  //     </View>
+  //     {/* </Link> */}
+  //   </View>
+  // );
 };
 
 const StoryView = () => {
   const { data, isLoading, isError } = useQuery(["topStories"], topStories);
 
-  if (isLoading) return <StyledText>Loading...</StyledText>;
-  if (isError) return <StyledText>Error</StyledText>;
+  if (isLoading) return <Text>Loading...</Text>;
+  if (isError) return <Text>Error</Text>;
 
   return (
-    <StyledView>
-      <StyledView>
-        {data.map((story) => (
+    <View>
+      <View>
+        {/* {data.map((story) => (
           <StoryItem
             key={story.id}
             id={story.id}
@@ -65,18 +60,18 @@ const StoryView = () => {
             comments={story.descendants}
             createdAt={new Date(story.time * 1000).toISOString()}
           />
-        ))}
-      </StyledView>
-    </StyledView>
+        ))} */}
+      </View>
+    </View>
   );
 };
 
 export default function Story({ navigation }: { navigation: any }) {
   return (
     <SafeAreaView>
-      <StyledScrollView className="bg-black">
+      <ScrollView>
         <StoryView />
-      </StyledScrollView>
+      </ScrollView>
     </SafeAreaView>
   );
 }

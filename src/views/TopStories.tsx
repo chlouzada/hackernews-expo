@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useLayoutEffect, useState } from "react";
 import {
+  Button,
+  SafeAreaView,
   ScrollView,
   StatusBar,
   TouchableHighlight,
@@ -9,7 +11,6 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { topStories } from "../queries/hn";
 import { date } from "../utils/date";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useTailwind } from "tailwind-rn/dist";
 import StyledText from "../components/StyledText";
 
@@ -30,9 +31,11 @@ const StoryItem = (props: {
       key={props.data.id}
       style={tw("p-2")}
       activeOpacity={0.6}
-      onPress={() => props.navigation.navigate("Story", { storyId: props.data.id })}
+      onPress={() =>
+        props.navigation.navigate("Story", { storyId: props.data.id })
+      }
     >
-      <View >
+      <View>
         <StyledText classNames="text-2xl" text={props.data.title} />
         <StyledText
           classNames="text-xs"
@@ -96,9 +99,20 @@ const TopStoriesView = (props: { navigation: any }) => {
 };
 export default function TopStories(props: { navigation: any }) {
   const tw = useTailwind();
+  // const [count, setCount] = useState(0)
+
+  // useLayoutEffect(() => {
+  //   props.navigation.setOptions({
+  //     headerRight: () => (
+  //       <Button onPress={() => setCount((c) => c + 1)} title="Update count" />
+  //     ),
+  //   });
+  // }, [props.navigation, count]);
+
   return (
     <SafeAreaView>
       <StatusBar />
+      {/* <StyledText text={`${count}`} classNames="text-2xl bg-black"/> */}
       <ScrollView style={tw("bg-black")}>
         <TopStoriesView {...props} />
       </ScrollView>

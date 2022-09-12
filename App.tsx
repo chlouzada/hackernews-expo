@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Text } from "react-native";
+import { Button, Text, View } from "react-native";
 import TopStories from "./src/views/TopStories";
 import Story from "./src/views/Story";
 import { TailwindProvider } from "tailwind-rn";

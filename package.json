@@ -24,7 +24,7 @@
   },
   "scripts": {
     "start": "expo start --tunnel",
-    "android": "expo start --android --tunnel",
+    "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
     "build:tailwind": "tailwindcss --input input.css --output tailwind.css --no-autoprefixer && tailwind-rn",

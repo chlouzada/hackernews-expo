@@ -6,24 +6,12 @@
   margin-right: 0.5rem
 }
 
-.mt-\[0\.3rem\] {
-  margin-top: 0.3rem
-}
-
-.mr-\[0\.3rem\] {
-  margin-right: 0.3rem
-}
-
-.mt-\[0\.5rem\] {
-  margin-top: 0.5rem
-}
-
-.mt-1 {
-  margin-top: 0.25rem
-}
-
 .mt-2 {
   margin-top: 0.5rem
+}
+
+.mt-\[0\.3rem\] {
+  margin-top: 0.3rem
 }
 
 .flex {
@@ -40,10 +28,6 @@
 
 .flex-row {
   flex-direction: row
-}
-
-.flex-col {
-  flex-direction: column
 }
 
 .items-center {
@@ -93,10 +77,6 @@
 
 .p-2 {
   padding: 0.5rem
-}
-
-.p-\[1px\] {
-  padding: 1px
 }
 
 .text-2xl {

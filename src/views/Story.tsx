@@ -9,6 +9,9 @@ import { useTailwind } from "tailwind-rn/dist";
 import StyledText from "../components/StyledText";
 import { Comment, StoryWithContent } from "../queries/hn/interfaces";
 
+import { useWindowDimensions } from "react-native";
+import RenderHtml from "react-native-render-html";
+
 const CommentItem = ({
   created_at,
   author,
@@ -18,6 +21,7 @@ const CommentItem = ({
 }: Comment & { _level?: number }) => {
   // const [collapsed, setCollapsed] = useState(false);
   const tw = useTailwind();
+  const { width } = useWindowDimensions();
 
   if (!text) return null;
 
@@ -39,8 +43,7 @@ const CommentItem = ({
     <View style={tw("flex flex-row mt-2")}>
       <View style={tw(`mt-[0.3rem] ${color()}`)} />
       <View>
-        <StyledText text={text} />
-
+        <RenderHtml contentWidth={width} source={{ html: text }} baseStyle={{color:"white"}}/>
         <View style={tw("flex flex-row justify-between")}>
           <StyledText text={author} />
           <StyledText text={date(created_at)} />
@@ -76,8 +79,9 @@ const StoryItem = ({
 };
 
 const Toolbar = ({ id, title, url }: StoryWithContent) => {
+  const tw = useTailwind();
   return (
-    <View>
+    <View style={tw("flex flex-row")}>
       <Button onPress={() => alert(id)} title="Id" />
       <Button onPress={() => alert(url)} title="url" />
     </View>

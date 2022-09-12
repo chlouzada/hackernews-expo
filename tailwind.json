@@ -9,29 +9,14 @@
 			"marginRight": 8
 		}
 	},
-	"mt-[0.3rem]": {
-		"style": {
-			"marginTop": 4.8
-		}
-	},
-	"mr-[0.3rem]": {
-		"style": {
-			"marginRight": 4.8
-		}
-	},
-	"mt-[0.5rem]": {
-		"style": {
-			"marginTop": 8
-		}
-	},
-	"mt-1": {
-		"style": {
-			"marginTop": 4
-		}
-	},
 	"mt-2": {
 		"style": {
 			"marginTop": 8
+		}
+	},
+	"mt-[0.3rem]": {
+		"style": {
+			"marginTop": 4.8
 		}
 	},
 	"flex": {
@@ -54,11 +39,6 @@
 	"flex-row": {
 		"style": {
 			"flexDirection": "row"
-		}
-	},
-	"flex-col": {
-		"style": {
-			"flexDirection": "column"
 		}
 	},
 	"items-center": {
@@ -128,14 +108,6 @@
 			"paddingRight": 8,
 			"paddingBottom": 8,
 			"paddingLeft": 8
-		}
-	},
-	"p-[1px]": {
-		"style": {
-			"paddingTop": 1,
-			"paddingRight": 1,
-			"paddingBottom": 1,
-			"paddingLeft": 1
 		}
 	},
 	"text-2xl": {

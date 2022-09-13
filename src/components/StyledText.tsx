@@ -21,8 +21,6 @@ export default function StyledText({
     size == "xs" && { fontSize: 12, lineHeight: 16 },
     bold && { fontWeight: "bold" },
   ];
-
-  console.log(bold)
   return (
     <Text style={[{ color: "white" }, styleProps, style]}>
       {text ?? children}

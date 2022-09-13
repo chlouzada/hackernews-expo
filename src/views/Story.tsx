@@ -1,5 +1,14 @@
 import React, { useEffect } from "react";
-import { Button, ScrollView, StatusBar, Text, View } from "react-native";
+import {
+  Button,
+  ScrollView,
+  StatusBar,
+  StyleProp,
+  StyleSheetProperties,
+  Text,
+  TextStyle,
+  View,
+} from "react-native";
 import { useQuery } from "react-query";
 import { story } from "../queries/hn";
 import { date } from "../utils/date";
@@ -9,17 +18,7 @@ import { Comment, StoryWithContent } from "../queries/hn/interfaces";
 import HTMLView from "react-native-htmlview";
 import { useWindowDimensions } from "react-native";
 import { StyleSheet } from "react-native";
-
-const styles = StyleSheet.create({
-  a: {
-    fontWeight: "300",
-    color: "#FF3366", // make links coloured pink
-  },
-  p: {
-    fontWeight: "300",
-    color: "white", // make links coloured pink
-  },
-});
+import RenderHTML from "react-native-render-html";
 
 const CommentItem = ({
   created_at,
@@ -31,29 +30,59 @@ const CommentItem = ({
   // const [collapsed, setCollapsed] = useState(false);
   const { width } = useWindowDimensions();
 
+  console.log(width);
+
   if (!text) return null;
 
   console.log(_level == -1 ? text : "");
 
-  const color = () => {
-    if (_level === -1) return "";
+  const barStyle = () => {
+    if (_level === -1) return;
     const n = _level % 4;
-    const style = "ml-[0.1rem] mr-[0.5rem] p-[2px] rounded ";
-    if (n === 0) return `${style} bg-blue-400`;
-    if (n === 1) return `${style} bg-green-400`;
-    if (n === 2) return `${style} bg-yellow-400`;
-    if (n === 3) return `${style} bg-red-400`;
+
+    const styles: StyleProp<TextStyle> = {
+      marginTop: 4.8,
+      marginLeft: 1.6,
+      padding: 2,
+      borderRadius: 4,
+      backgroundColor: undefined,
+      marginRight: _level === -1 ? undefined : 8,
+    };
+
+    if (n === 0) styles.backgroundColor = "rgb(96,165,250)";
+    if (n === 1) styles.backgroundColor = "rgb(74,222,128)";
+    if (n === 2) styles.backgroundColor = "rgb(250,204,21)";
+    if (n === 3) styles.backgroundColor = "rgb(248,113,113)";
+
+    return styles;
   };
 
   const sortedChildren = children.sort((a, b) => {
     return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
   });
 
+  let reducedWidth = _level === -1 ? width : width - 16.4 * _level;
+  reducedWidth -= 36;
+
   return (
-    <View style={{ flex: 1, flexDirection: "row", marginTop: 8 }}>
-      {/* <View style={tw(`mt-[0.3rem] ${color()}`)} /> */}
+    <View
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        width: "100%",
+        marginTop: 8,
+      }}
+    >
+      <View style={barStyle()} />
       <View>
-        {/* <HTMLView value={text} stylesheet={styles} /> */}
+        <View style={{ width: "100%", maxWidth: reducedWidth }}>
+          <RenderHTML
+            source={{ html: text }}
+            baseStyle={{ color: "white", textAlign: "justify" }}
+            contentWidth={width}
+            enableExperimentalMarginCollapsing={true}
+          />
+        </View>
         <View
           style={{
             flex: 1,
@@ -61,7 +90,6 @@ const CommentItem = ({
             justifyContent: "space-between",
           }}
         >
-          <StyledText text={author} style={{ opacity: 0.5 }} />
           <StyledText text={author} style={{ opacity: 0.5 }} />
           <StyledText text={date(created_at)} />
         </View>
@@ -83,7 +111,7 @@ const StoryItem = ({
 }: StoryWithContent) => {
   return (
     <View>
-      <StyledText size="2xl"  text={title} />
+      <StyledText size="2xl" text={title} />
       <StyledText text={text} />
       <View
         style={{
@@ -113,29 +141,24 @@ const StoryView = (props: { id: number; title: string; comments: number }) => {
   const { data, isLoading, isError } = useQuery(["story", props.id], () =>
     story(props.id)
   );
-  if (isLoading)
-    return (
-      <StyledText
-      size="lg" 
-        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        text="Loading..."
-      />
-    );
-  if (isError)
-    return (
-      <View>
-        <StyledText size="2xl"  text="Erro" />
-      </View>
-    );
+  if (isLoading) return <StyledText size="lg" text="Loading..." />;
+  if (isError) return <StyledText size="2xl" text="Erro" />;
 
   return (
     <>
       <StoryItem {...data} />
       {/* <Toolbar {...data} /> */}
-      <StyledText text="Comments" size="lg"  style={{ fontWeight: "bold" }} />
-      {data.children.map((child) => (
-        <CommentItem key={child.id} {...child} />
-      ))}
+      <StyledText
+        text="Comments"
+        size="lg"
+        bold
+        // style={{ fontWeight: "bold" }}
+      />
+      <View>
+        {data.children.map((child) => (
+          <CommentItem key={child.id} {...child} />
+        ))}
+      </View>
     </>
   );
 };
@@ -148,7 +171,7 @@ export default function Story(props: { navigation: any; route: any }) {
   return (
     <SafeAreaView>
       <StatusBar />
-      <ScrollView style={{ backgroundColor: "black" }}>
+      <ScrollView style={{ backgroundColor: "black", padding: 8 }}>
         <StoryView {...props.route.params} />
       </ScrollView>
     </SafeAreaView>

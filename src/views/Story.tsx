@@ -30,8 +30,6 @@ const CommentItem = ({
   // const [collapsed, setCollapsed] = useState(false);
   const { width } = useWindowDimensions();
 
-  console.log(width);
-
   if (!text) return null;
 
   console.log(_level == -1 ? text : "");
@@ -61,7 +59,7 @@ const CommentItem = ({
     return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
   });
 
-  let reducedWidth = _level === -1 ? width : width - 16.4 * _level;
+  let reducedWidth = _level === -1 ? width : width - 15.6 * _level;
   reducedWidth -= 36;
 
   return (
@@ -70,7 +68,7 @@ const CommentItem = ({
         display: "flex",
         flexDirection: "row",
         width: "100%",
-        marginTop: 8,
+        // marginTop: 8,
       }}
     >
       <View style={barStyle()} />
@@ -94,8 +92,12 @@ const CommentItem = ({
             justifyContent: "space-between",
           }}
         >
-          <StyledText text={author} style={{ opacity: 0.5 }} />
-          <StyledText text={date(created_at)} />
+          <StyledText size="xs" text={author} style={{ opacity: 0.4 }} />
+          <StyledText
+            size="xs"
+            text={date(created_at)}
+            style={{ opacity: 0.4 }}
+          />
         </View>
         {sortedChildren.map((child) => (
           <CommentItem key={child.id} {...child} _level={_level + 1} />
@@ -127,8 +129,16 @@ const StoryItem = ({
           justifyContent: "space-between",
         }}
       >
-        <StyledText text={`${author} (${points})`} />
-        <StyledText text={date(created_at)} />
+        <StyledText
+          size="xs"
+          text={`${author} (${points})`}
+          style={{ opacity: 0.4 }}
+        />
+        <StyledText
+          size="xs"
+          text={date(created_at)}
+          style={{ opacity: 0.4 }}
+        />
       </View>
     </View>
   );

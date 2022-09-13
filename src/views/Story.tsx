@@ -1,11 +1,9 @@
 import React, { useEffect } from "react";
 import { Button, ScrollView, StatusBar, Text, View } from "react-native";
-import { useQuery } from "@tanstack/react-query";
-import { story, topStories } from "../queries/hn";
+import { useQuery } from "react-query";
+import { story } from "../queries/hn";
 import { date } from "../utils/date";
-import { useFonts } from "expo-font";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useTailwind } from "tailwind-rn/dist";
 import StyledText from "../components/StyledText";
 import { Comment, StoryWithContent } from "../queries/hn/interfaces";
 
@@ -20,7 +18,6 @@ const CommentItem = ({
   _level = -1,
 }: Comment & { _level?: number }) => {
   // const [collapsed, setCollapsed] = useState(false);
-  const tw = useTailwind();
   const { width } = useWindowDimensions();
 
   if (!text) return null;
@@ -40,12 +37,23 @@ const CommentItem = ({
   });
 
   return (
-    <View style={tw("flex flex-row mt-2")}>
-      <View style={tw(`mt-[0.3rem] ${color()}`)} />
+    <View style={{ flex: 1, flexDirection: "row", marginTop: 8 }}>
+      {/* <View style={tw(`mt-[0.3rem] ${color()}`)} /> */}
       <View>
-        <RenderHtml source={{ html: text }} baseStyle={{ color: "white"  }} contentWidth={width*((10-_level)/100)} />
-        <View style={tw("flex flex-row justify-between")}>
-          <StyledText text={author} classNames="opacity-10" />
+        <RenderHtml
+          source={{ html: text }}
+          baseStyle={{ color: "white" }}
+          contentWidth={width * 0.5}
+        />
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <StyledText text={author} style={{ opacity: 0.5 }} />
+          <StyledText text={author} style={{ opacity: 0.5 }} />
           <StyledText text={date(created_at)} />
         </View>
         {sortedChildren.map((child) => (
@@ -64,10 +72,9 @@ const StoryItem = ({
   author,
   text,
 }: StoryWithContent) => {
-  const tw = useTailwind();
   return (
     <View>
-      <StyledText classNames="text-2xl" text={title} />
+      <StyledText text_2xl text={title} />
       <StyledText text={text} />
       <View style={tw("flex flex-row justify-between")}>
         <StyledText text={`${author} (${points})`} />
@@ -79,7 +86,6 @@ const StoryItem = ({
 };
 
 const Toolbar = ({ id, title, url }: StoryWithContent) => {
-  const tw = useTailwind();
   return (
     <View style={tw("flex flex-row")}>
       <Button onPress={() => alert(id)} title="Id" />
@@ -89,23 +95,21 @@ const Toolbar = ({ id, title, url }: StoryWithContent) => {
 };
 
 const StoryView = (props: { id: number; title: string; comments: number }) => {
-  const tw = useTailwind();
   const { data, isLoading, isError } = useQuery(["story", props.id], () =>
     story(props.id)
   );
   if (isLoading)
     return (
-      <View style={tw("flex-1 grow justify-center items-center")}>
-        <StyledText
-          classNames="text-lg flex-1 justify-center items-center"
-          text="Loading..."
-        />
-      </View>
+      <StyledText
+        text_lg
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        text="Loading..."
+      />
     );
   if (isError)
     return (
       <View>
-        <StyledText classNames="text-2xl" text="Erro" />
+        <StyledText text_2xl text="Erro" />
       </View>
     );
 
@@ -113,7 +117,7 @@ const StoryView = (props: { id: number; title: string; comments: number }) => {
     <>
       <StoryItem {...data} />
       {/* <Toolbar {...data} /> */}
-      <StyledText text="Comments" classNames="text-lg font-bold" />
+      <StyledText text="Comments" text_lg style={{ fontWeight: "bold" }} />
       {data.children.map((child) => (
         <CommentItem key={child.id} {...child} />
       ))}
@@ -122,9 +126,6 @@ const StoryView = (props: { id: number; title: string; comments: number }) => {
 };
 
 export default function Story(props: { navigation: any; route: any }) {
-  const tw = useTailwind();
-
-  // update header title with text
   useEffect(() => {
     props.navigation.setOptions({});
   }, []);
@@ -132,7 +133,7 @@ export default function Story(props: { navigation: any; route: any }) {
   return (
     <SafeAreaView>
       <StatusBar />
-      <ScrollView style={tw("bg-black p-2")}>
+      <ScrollView style={{ backgroundColor: "black" }}>
         <StoryView {...props.route.params} />
       </ScrollView>
     </SafeAreaView>

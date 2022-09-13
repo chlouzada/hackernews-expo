@@ -1,17 +1,14 @@
-import React, { useLayoutEffect, useState } from "react";
+import React from "react";
 import {
-  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
   TouchableHighlight,
-  TouchableOpacity,
   View,
 } from "react-native";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from "react-query";
 import { topStories } from "../queries/hn";
 import { date } from "../utils/date";
-import { useTailwind } from "tailwind-rn/dist";
 import StyledText from "../components/StyledText";
 
 const StoryItem = (props: {
@@ -25,11 +22,10 @@ const StoryItem = (props: {
     createdAt: string;
   };
 }) => {
-  const tw = useTailwind();
   return (
     <TouchableHighlight
       key={props.data.id}
-      style={tw("p-2")}
+      style={{ padding: 2 }}
       activeOpacity={0.6}
       onPress={() =>
         props.navigation.navigate("Story", {
@@ -40,20 +36,34 @@ const StoryItem = (props: {
       }
     >
       <View>
-        <StyledText classNames="text-2xl" text={props.data.title} />
-        <View style={tw("flex flex-row justify-end")}>
+        <StyledText text_2xl text={props.data.title} />
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "flex-end",
+          }}
+        >
           <StyledText
-            classNames="text-xs opacity-40"
+            text_xs
+            style={{ fontWeight: "bold", opacity: 0.5 }}
             text={`${props.data.author} (${props.data.score})`}
           />
         </View>
-        <View style={tw("flex flex-row justify-between")}>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
           <StyledText
-            classNames="text-sm font-bold"
+            style={{ fontWeight: "bold" }}
             text={`${props.data.comments} comments`}
           />
           <StyledText
-            classNames="text-sm font-bold"
+            style={{ fontWeight: "bold" }}
+            // classNames="text-sm font-bold"
             text={date(props.data.createdAt)}
           />
         </View>
@@ -63,22 +73,18 @@ const StoryItem = (props: {
 };
 
 const TopStoriesView = (props: { navigation: any }) => {
-  const tw = useTailwind();
   const { data, isLoading, isError } = useQuery(["topStories"], topStories);
 
   if (isLoading)
     return (
-      <View style={tw("flex-1 grow justify-center items-center")}>
-        <StyledText
-          classNames="text-lg flex-1 justify-center items-center"
-          text="Loading..."
-        />
+      <View>
+        <StyledText text_2xl text="Erro" />
       </View>
     );
   if (isError)
     return (
       <View>
-        <StyledText classNames="text-2xl" text="Erro" />
+        <StyledText text_2xl text="Erro" />
       </View>
     );
 
@@ -104,22 +110,11 @@ const TopStoriesView = (props: { navigation: any }) => {
   );
 };
 export default function TopStories(props: { navigation: any }) {
-  const tw = useTailwind();
-  // const [count, setCount] = useState(0)
-
-  // useLayoutEffect(() => {
-  //   props.navigation.setOptions({
-  //     headerRight: () => (
-  //       <Button onPress={() => setCount((c) => c + 1)} title="Update count" />
-  //     ),
-  //   });
-  // }, [props.navigation, count]);
-
   return (
     <SafeAreaView>
       <StatusBar />
       {/* <StyledText text={`${count}`} classNames="text-2xl bg-black"/> */}
-      <ScrollView style={tw("bg-black")}>
+      <ScrollView style={{ backgroundColor: "black" }}>
         <TopStoriesView {...props} />
       </ScrollView>
     </SafeAreaView>

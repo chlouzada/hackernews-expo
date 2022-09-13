@@ -13,7 +13,7 @@ export default function StyledText({
   bold?: true;
 } & (
   | { text?: string; children?: never }
-  | { text?: never; children: string }
+  | { text?: never; children: any }
 )) {
   const styleProps: any = [
     size == "2xl" && { fontSize: 24, lineHeight: 32 },

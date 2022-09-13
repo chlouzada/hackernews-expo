@@ -17,7 +17,7 @@ export default function App() {
       <TailwindProvider utilities={utilities}>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="Top Stories"
+            initialRouteName="Story"
             screenOptions={{
               headerShown: false,
             }}

@@ -74,11 +74,15 @@ const CommentItem = ({
       }}
     >
       <View style={barStyle()} />
-      <View>
+      <View
+        style={{
+          flex: 1,
+        }}
+      >
         <View style={{ width: "100%", maxWidth: reducedWidth }}>
           <RenderHTML
             source={{ html: text }}
-            baseStyle={{ color: "white", textAlign: "justify" }}
+            baseStyle={{ color: "white" }}
             contentWidth={width}
             enableExperimentalMarginCollapsing={true}
           />
@@ -112,10 +116,13 @@ const StoryItem = ({
   return (
     <View>
       <StyledText size="2xl" text={title} />
+
+      {/* TODO: HTML RENDER */}
       <StyledText text={text} />
+
       <View
         style={{
-          flex: 1,
+          display: "flex",
           flexDirection: "row",
           justifyContent: "space-between",
         }}
@@ -123,7 +130,6 @@ const StoryItem = ({
         <StyledText text={`${author} (${points})`} />
         <StyledText text={date(created_at)} />
       </View>
-      <StyledText text={text} />
     </View>
   );
 };
@@ -138,8 +144,8 @@ const Toolbar = ({ id, title, url }: StoryWithContent) => {
 };
 
 const StoryView = (props: { id: number; title: string; comments: number }) => {
-  const { data, isLoading, isError } = useQuery(["story", props.id], () =>
-    story(props.id)
+  const { data, isLoading, isError } = useQuery(["story", props?.id], () =>
+    story(32828669)
   );
   if (isLoading) return <StyledText size="lg" text="Loading..." />;
   if (isError) return <StyledText size="2xl" text="Erro" />;
@@ -148,17 +154,10 @@ const StoryView = (props: { id: number; title: string; comments: number }) => {
     <>
       <StoryItem {...data} />
       {/* <Toolbar {...data} /> */}
-      <StyledText
-        text="Comments"
-        size="lg"
-        bold
-        // style={{ fontWeight: "bold" }}
-      />
-      <View>
-        {data.children.map((child) => (
-          <CommentItem key={child.id} {...child} />
-        ))}
-      </View>
+      <StyledText bold>{props?.comments} Comments</StyledText>
+      {data.children.map((child) => (
+        <CommentItem key={child.id} {...child} />
+      ))}
     </>
   );
 };

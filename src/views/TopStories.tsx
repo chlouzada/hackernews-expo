@@ -25,7 +25,7 @@ const StoryItem = (props: {
   return (
     <TouchableHighlight
       key={props.data.id}
-      style={{ padding: 2 }}
+      // style={{ padding: 2 }}
       activeOpacity={0.6}
       onPress={() =>
         props.navigation.navigate("Story", {
@@ -36,36 +36,25 @@ const StoryItem = (props: {
       }
     >
       <View>
-        <StyledText text_2xl text={props.data.title} />
-        <View
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            justifyContent: "flex-end",
-          }}
-        >
+        <StyledText size="2xl" text={props.data.title} />
+        <View>
           <StyledText
-            text_xs
-            style={{ fontWeight: "bold", opacity: 0.5 }}
+            size="xs"
+            bold
+            style={{ opacity: 0.5, paddingBottom: 2 }}
             text={`${props.data.author} (${props.data.score})`}
           />
-        </View>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <StyledText
-            style={{ fontWeight: "bold" }}
-            text={`${props.data.comments} comments`}
-          />
-          <StyledText
-            style={{ fontWeight: "bold" }}
-            // classNames="text-sm font-bold"
-            text={date(props.data.createdAt)}
-          />
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingBottom: 16,
+            }}
+          >
+            <StyledText bold text={`${props.data.comments} comments`} />
+            <StyledText bold text={date(props.data.createdAt)} />
+          </View>
         </View>
       </View>
     </TouchableHighlight>
@@ -78,43 +67,40 @@ const TopStoriesView = (props: { navigation: any }) => {
   if (isLoading)
     return (
       <View>
-        <StyledText text_2xl text="Erro" />
+        <StyledText size="2xl" text="Erro" />
       </View>
     );
   if (isError)
     return (
       <View>
-        <StyledText text_2xl text="Erro" />
+        <StyledText size="2xl" text="Erro" />
       </View>
     );
 
   return (
-    <View>
-      <View>
-        {data.map((story) => (
-          <StoryItem
-            key={story.id}
-            navigation={props.navigation}
-            data={{
-              id: story.id,
-              title: story.title,
-              score: story.score,
-              author: story.by,
-              comments: story.descendants,
-              createdAt: new Date(story.time * 1000).toISOString(),
-            }}
-          />
-        ))}
-      </View>
-    </View>
+    <>
+      {data.map((story) => (
+        <StoryItem
+          key={story.id}
+          navigation={props.navigation}
+          data={{
+            id: story.id,
+            title: story.title,
+            score: story.score,
+            author: story.by,
+            comments: story.descendants,
+            createdAt: new Date(story.time * 1000).toISOString(),
+          }}
+        />
+      ))}
+    </>
   );
 };
 export default function TopStories(props: { navigation: any }) {
   return (
     <SafeAreaView>
       <StatusBar />
-      {/* <StyledText text={`${count}`} classNames="text-2xl bg-black"/> */}
-      <ScrollView style={{ backgroundColor: "black" }}>
+      <ScrollView style={{ backgroundColor: "black", padding: 8 }}>
         <TopStoriesView {...props} />
       </ScrollView>
     </SafeAreaView>

@@ -6,9 +6,20 @@ import { date } from "../utils/date";
 import { SafeAreaView } from "react-native-safe-area-context";
 import StyledText from "../components/StyledText";
 import { Comment, StoryWithContent } from "../queries/hn/interfaces";
-
+import HTMLView from "react-native-htmlview";
 import { useWindowDimensions } from "react-native";
-import RenderHtml from "react-native-render-html";
+import { StyleSheet } from "react-native";
+
+const styles = StyleSheet.create({
+  a: {
+    fontWeight: "300",
+    color: "#FF3366", // make links coloured pink
+  },
+  p: {
+    fontWeight: "300",
+    color: "white", // make links coloured pink
+  },
+});
 
 const CommentItem = ({
   created_at,
@@ -21,6 +32,8 @@ const CommentItem = ({
   const { width } = useWindowDimensions();
 
   if (!text) return null;
+
+  console.log(_level == -1 ? text : "");
 
   const color = () => {
     if (_level === -1) return "";
@@ -40,11 +53,7 @@ const CommentItem = ({
     <View style={{ flex: 1, flexDirection: "row", marginTop: 8 }}>
       {/* <View style={tw(`mt-[0.3rem] ${color()}`)} /> */}
       <View>
-        <RenderHtml
-          source={{ html: text }}
-          baseStyle={{ color: "white" }}
-          contentWidth={width * 0.5}
-        />
+        {/* <HTMLView value={text} stylesheet={styles} /> */}
         <View
           style={{
             flex: 1,
@@ -74,9 +83,15 @@ const StoryItem = ({
 }: StoryWithContent) => {
   return (
     <View>
-      <StyledText text_2xl text={title} />
+      <StyledText size="2xl"  text={title} />
       <StyledText text={text} />
-      <View style={tw("flex flex-row justify-between")}>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
         <StyledText text={`${author} (${points})`} />
         <StyledText text={date(created_at)} />
       </View>
@@ -87,7 +102,7 @@ const StoryItem = ({
 
 const Toolbar = ({ id, title, url }: StoryWithContent) => {
   return (
-    <View style={tw("flex flex-row")}>
+    <View style={{ flex: 1, flexDirection: "row" }}>
       <Button onPress={() => alert(id)} title="Id" />
       <Button onPress={() => alert(url)} title="url" />
     </View>
@@ -101,7 +116,7 @@ const StoryView = (props: { id: number; title: string; comments: number }) => {
   if (isLoading)
     return (
       <StyledText
-        text_lg
+      size="lg" 
         style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         text="Loading..."
       />
@@ -109,7 +124,7 @@ const StoryView = (props: { id: number; title: string; comments: number }) => {
   if (isError)
     return (
       <View>
-        <StyledText text_2xl text="Erro" />
+        <StyledText size="2xl"  text="Erro" />
       </View>
     );
 
@@ -117,7 +132,7 @@ const StoryView = (props: { id: number; title: string; comments: number }) => {
     <>
       <StoryItem {...data} />
       {/* <Toolbar {...data} /> */}
-      <StyledText text="Comments" text_lg style={{ fontWeight: "bold" }} />
+      <StyledText text="Comments" size="lg"  style={{ fontWeight: "bold" }} />
       {data.children.map((child) => (
         <CommentItem key={child.id} {...child} />
       ))}

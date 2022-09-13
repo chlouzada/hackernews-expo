@@ -5,27 +5,26 @@ export default function StyledText({
   text,
   children,
   style,
-
-  text_2xl,
-  text_lg,
-  text_xs,
+  size,
+  bold,
 }: {
   style?: StyleProp<TextStyle>;
-  text_2xl?: true;
-  text_lg?: true;
-  text_xs?: true;
+  size?: "2xl" | "lg" | "xs";
+  bold?: true;
 } & (
   | { text?: string; children?: never }
   | { text?: never; children: string }
 )) {
-  const fontSize = [
-    text_2xl && { fontSize: 24, lineHeight: 32 },
-    text_lg && { fontSize: 18, lineHeight: 28 },
-    text_xs && { fontSize: 12, lineHeight: 16 },
+  const styleProps: any = [
+    size == "2xl" && { fontSize: 24, lineHeight: 32 },
+    size == "lg" && { fontSize: 18, lineHeight: 28 },
+    size == "xs" && { fontSize: 12, lineHeight: 16 },
+    bold && { fontWeight: "bold" },
   ];
 
+  console.log(bold)
   return (
-    <Text style={[{ color: "white", lineHeight: 2 }, style, ...fontSize]}>
+    <Text style={[{ color: "white" }, styleProps, style]}>
       {text ?? children}
     </Text>
   );

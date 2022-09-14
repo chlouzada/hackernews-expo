@@ -10,6 +10,8 @@ import { useQuery } from "react-query";
 import { topStories } from "../queries/hn";
 import { date } from "../utils/date";
 import StyledText from "../components/StyledText";
+import LoadingView from "../views/LoadingView";
+import ErrorView from "../views/ErrorView";
 
 const StoryItem = (props: {
   navigation: any;
@@ -64,22 +66,12 @@ const StoryItem = (props: {
 const TopStoriesView = (props: { navigation: any }) => {
   const { data, isLoading, isError } = useQuery(["topStories"], topStories);
 
-  if (isLoading)
-    return (
-      <View>
-        <StyledText size="2xl" text="Erro" />
-      </View>
-    );
-  if (isError)
-    return (
-      <View>
-        <StyledText size="2xl" text="Erro" />
-      </View>
-    );
+  if (isLoading) return <LoadingView />;
+  if (isError) return <ErrorView />;
 
   return (
     <>
-      {data.map((story) => (
+      {data?.map((story) => (
         <StoryItem
           key={story.id}
           navigation={props.navigation}

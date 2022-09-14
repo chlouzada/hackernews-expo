@@ -15,6 +15,8 @@ import StyledText from "../components/StyledText";
 import { Comment, StoryWithContent } from "../queries/hn/interfaces";
 import { useWindowDimensions } from "react-native";
 import RenderHTML from "react-native-render-html";
+import LoadingView from "../views/LoadingView";
+import ErrorView from "../views/ErrorView";
 
 const CommentItem = ({
   created_at,
@@ -155,8 +157,8 @@ const StoryView = (props: { id: number; title: string; comments: number }) => {
     story(props.id)
   );
   
-  if (isLoading) return <StyledText size="lg" text="Loading..." />;
-  if (isError) return <StyledText size="2xl" text="Erro" />;
+  if (isLoading) return <LoadingView />;
+  if (isError) return <ErrorView />;
 
   return (
     <>

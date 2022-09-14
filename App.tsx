@@ -1,9 +1,8 @@
 import { QueryClient, QueryClientProvider } from "react-query";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import TopStories from "./src/views/TopStories";
-import Story from "./src/views/Story";
-import utilities from "./tailwind.json";
+import TopStories from "./src/pages/TopStories";
+import Story from "./src/pages/Story";
 
 const queryClient = new QueryClient();
 

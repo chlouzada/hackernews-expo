@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "HN Reader",
+    "slug": "hn-reader",
+    "extra": {
+      "eas": {
+        "projectId": "f55bcae0-7e50-4257-a1c7-2030832704a4"
+      }
+    },
+    "android": {
+      "package": "com.chlou.hnreader"
+    }
+  }
+}

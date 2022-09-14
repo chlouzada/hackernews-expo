@@ -21,9 +21,9 @@ const _topStories = async () => {
 };
 
 export const topStories = async () => {
-  // const res = await _topStories();
-  // return res[0].result.data.json;
-  return _mockTopStories
+  const res = await _topStories();
+  return res[0].result.data.json;
+  // return _mockTopStories
 };
 
 const _story = async (id: number) => {

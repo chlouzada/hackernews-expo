@@ -4,8 +4,6 @@ import {
   ScrollView,
   StatusBar,
   StyleProp,
-  StyleSheetProperties,
-  Text,
   TextStyle,
   View,
 } from "react-native";
@@ -15,9 +13,7 @@ import { date } from "../utils/date";
 import { SafeAreaView } from "react-native-safe-area-context";
 import StyledText from "../components/StyledText";
 import { Comment, StoryWithContent } from "../queries/hn/interfaces";
-import HTMLView from "react-native-htmlview";
 import { useWindowDimensions } from "react-native";
-import { StyleSheet } from "react-native";
 import RenderHTML from "react-native-render-html";
 
 const CommentItem = ({
@@ -32,15 +28,15 @@ const CommentItem = ({
 
   if (!text) return null;
 
-  console.log(_level == -1 ? text : "");
-
   const barStyle = () => {
     if (_level === -1) return;
     const n = _level % 4;
 
     const styles: StyleProp<TextStyle> = {
-      marginTop: 4.8,
-      marginLeft: 1.6,
+      opacity: 0.66,
+      marginTop: 2,
+      marginBottom: 12,
+      marginLeft: 1,
       padding: 2,
       borderRadius: 4,
       backgroundColor: undefined,
@@ -77,14 +73,6 @@ const CommentItem = ({
           flex: 1,
         }}
       >
-        <View style={{ width: "100%", maxWidth: reducedWidth }}>
-          <RenderHTML
-            source={{ html: text }}
-            baseStyle={{ color: "white" }}
-            contentWidth={width}
-            enableExperimentalMarginCollapsing={true}
-          />
-        </View>
         <View
           style={{
             flex: 1,
@@ -99,6 +87,15 @@ const CommentItem = ({
             style={{ opacity: 0.4 }}
           />
         </View>
+        <View style={{ width: "100%", maxWidth: reducedWidth }}>
+          <RenderHTML
+            source={{ html: text }}
+            baseStyle={{ color: "white" }}
+            contentWidth={width}
+            enableExperimentalMarginCollapsing={true}
+          />
+        </View>
+
         {sortedChildren.map((child) => (
           <CommentItem key={child.id} {...child} _level={_level + 1} />
         ))}
@@ -154,9 +151,10 @@ const Toolbar = ({ id, title, url }: StoryWithContent) => {
 };
 
 const StoryView = (props: { id: number; title: string; comments: number }) => {
-  const { data, isLoading, isError } = useQuery(["story", props?.id], () =>
-    story(32828669)
+  const { data, isLoading, isError } = useQuery(["story", props.id], () =>
+    story(props.id)
   );
+  
   if (isLoading) return <StyledText size="lg" text="Loading..." />;
   if (isError) return <StyledText size="2xl" text="Erro" />;
 
@@ -164,7 +162,9 @@ const StoryView = (props: { id: number; title: string; comments: number }) => {
     <>
       <StoryItem {...data} />
       {/* <Toolbar {...data} /> */}
-      <StyledText bold>{props?.comments} Comments</StyledText>
+      <View style={{ paddingBottom: 16 }} />
+      <StyledText bold>{props.comments} Comments</StyledText>
+      <View style={{ paddingBottom: 16 }} />
       {data.children.map((child) => (
         <CommentItem key={child.id} {...child} />
       ))}
@@ -173,10 +173,6 @@ const StoryView = (props: { id: number; title: string; comments: number }) => {
 };
 
 export default function Story(props: { navigation: any; route: any }) {
-  useEffect(() => {
-    props.navigation.setOptions({});
-  }, []);
-
   return (
     <SafeAreaView>
       <StatusBar />

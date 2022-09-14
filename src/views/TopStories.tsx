@@ -96,6 +96,7 @@ const TopStoriesView = (props: { navigation: any }) => {
     </>
   );
 };
+
 export default function TopStories(props: { navigation: any }) {
   return (
     <SafeAreaView>

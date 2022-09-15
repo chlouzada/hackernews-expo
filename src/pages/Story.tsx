@@ -18,6 +18,7 @@ import { useWindowDimensions } from "react-native";
 import LoadingView from "../views/LoadingView";
 import ErrorView from "../views/ErrorView";
 import { Html } from "../components/Html";
+import { defaults } from "../styles/defaults";
 
 const CommentItem = ({
   created_at,
@@ -54,7 +55,9 @@ const CommentItem = ({
     return styles;
   };
 
-  const reducedWidth = (_level === -1 ? width : width - 15.6 * _level) - 44;
+  const reducedWidth =
+    (_level === -1 ? width : width - 15.6 * _level) -
+    defaults.app.padding * 2;
 
   return (
     <View
@@ -176,7 +179,6 @@ const StoryView = (props: { id: number; title: string; comments: number }) => {
             <View style={{ paddingBottom: 16 }} />
           </>
         }
-        style={{ backgroundColor: "black", padding: 8 }}
         keyExtractor={(item) => item.comment.id.toString()}
         data={comments}
         renderItem={({ item }) => (
@@ -194,8 +196,10 @@ const StoryView = (props: { id: number; title: string; comments: number }) => {
 export default function Story(props: { navigation: any; route: any }) {
   return (
     <SafeAreaView>
-      <StatusBar />
-      <StoryView {...props.route.params} />
+      <View style={defaults.app}>
+        <StatusBar />
+        <StoryView {...props.route.params} />
+      </View>
     </SafeAreaView>
   );
 }

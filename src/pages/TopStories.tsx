@@ -7,12 +7,13 @@ import {
   TouchableHighlight,
   View,
 } from "react-native";
-import { useInfiniteQuery, useQuery } from "react-query";
-import { infiniteTopStories, topStories } from "../queries/hn";
+import { useQuery } from "react-query";
+import { topStories } from "../queries/hn";
 import { date } from "../utils/date";
 import StyledText from "../components/StyledText";
 import LoadingView from "../views/LoadingView";
 import ErrorView from "../views/ErrorView";
+import { defaults } from "../styles/defaults";
 
 const StoryItem = (props: {
   navigation: any;
@@ -28,7 +29,6 @@ const StoryItem = (props: {
   return (
     <TouchableHighlight
       key={props.data.id}
-      // style={{ padding: 2 }}
       activeOpacity={0.6}
       onPress={() =>
         props.navigation.navigate("Story", {
@@ -72,7 +72,6 @@ const TopStoriesView = (props: { navigation: any }) => {
 
   return (
     <FlatList
-      style={{ backgroundColor: "black", padding: 8 }}
       keyExtractor={(item, index) => index.toString()}
       data={data}
       renderItem={({ item }) => (
@@ -96,8 +95,10 @@ const TopStoriesView = (props: { navigation: any }) => {
 export default function TopStories(props: { navigation: any }) {
   return (
     <SafeAreaView>
-      <StatusBar />
-      <TopStoriesView {...props} />
+      <View style={defaults.app}>
+        <StatusBar />
+        <TopStoriesView {...props} />
+      </View>
     </SafeAreaView>
   );
 }

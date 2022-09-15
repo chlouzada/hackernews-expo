@@ -15,9 +15,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import StyledText from "../components/StyledText";
 import { Comment, StoryWithContent } from "../queries/hn/interfaces";
 import { useWindowDimensions } from "react-native";
-import RenderHTML from "react-native-render-html";
 import LoadingView from "../views/LoadingView";
 import ErrorView from "../views/ErrorView";
+import { Html } from "../components/Html";
 
 const CommentItem = ({
   created_at,
@@ -39,7 +39,7 @@ const CommentItem = ({
       opacity: 0.66,
       marginTop: 2,
       marginBottom: 12,
-      marginLeft: 1,
+      marginLeft: 10 * _level,
       padding: 2,
       borderRadius: 4,
       backgroundColor: undefined,
@@ -53,10 +53,6 @@ const CommentItem = ({
 
     return styles;
   };
-
-  const sortedChildren = children.sort((a, b) => {
-    return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-  });
 
   const reducedWidth = (_level === -1 ? width : width - 15.6 * _level) - 44;
 
@@ -89,17 +85,8 @@ const CommentItem = ({
           />
         </View>
         <View style={{ width: "100%", maxWidth: reducedWidth }}>
-          <RenderHTML
-            source={{ html: text }}
-            baseStyle={{ color: "white" }}
-            contentWidth={width}
-            enableExperimentalMarginCollapsing={true}
-          />
+          <Html html={text} width={reducedWidth} />
         </View>
-
-        {sortedChildren.map((child) => (
-          <CommentItem key={child.id} {...child} _level={_level + 1} />
-        ))}
       </View>
     </View>
   );
@@ -159,6 +146,24 @@ const StoryView = (props: { id: number; title: string; comments: number }) => {
   if (isLoading) return <LoadingView />;
   if (isError) return <ErrorView />;
 
+  const getComments = (comments: Comment[], _level: number = -1) => {
+    const result = new Array<{ comment: Comment; _level: number }>();
+    comments.map((comment) => {
+      result.push({ comment, _level });
+      if (comment.children.length > 0) {
+        const sorted = comment.children.sort((a, b) => {
+          return (
+            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+          );
+        });
+        result.push(...getComments(sorted, _level + 1));
+      }
+    });
+    return result;
+  };
+
+  const comments = getComments(data.children);
+
   return (
     <>
       <FlatList
@@ -172,9 +177,15 @@ const StoryView = (props: { id: number; title: string; comments: number }) => {
           </>
         }
         style={{ backgroundColor: "black", padding: 8 }}
-        keyExtractor={(item) => item.id.toString()}
-        data={data.children}
-        renderItem={({ item }) => <CommentItem key={item.id} {...item} />}
+        keyExtractor={(item) => item.comment.id.toString()}
+        data={comments}
+        renderItem={({ item }) => (
+          <CommentItem
+            key={item.comment.id}
+            {...item.comment}
+            _level={item._level}
+          />
+        )}
       />
     </>
   );

@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import {
   Button,
+  FlatList,
   ScrollView,
   StatusBar,
   StyleProp,
@@ -57,8 +58,7 @@ const CommentItem = ({
     return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
   });
 
-  let reducedWidth = _level === -1 ? width : width - 15.6 * _level;
-  reducedWidth -= 36;
+  const reducedWidth = (_level === -1 ? width : width - 15.6 * _level) - 44;
 
   return (
     <View
@@ -66,7 +66,6 @@ const CommentItem = ({
         display: "flex",
         flexDirection: "row",
         width: "100%",
-        // marginTop: 8,
       }}
     >
       <View style={barStyle()} />
@@ -156,20 +155,27 @@ const StoryView = (props: { id: number; title: string; comments: number }) => {
   const { data, isLoading, isError } = useQuery(["story", props.id], () =>
     story(props.id)
   );
-  
+
   if (isLoading) return <LoadingView />;
   if (isError) return <ErrorView />;
 
   return (
     <>
-      <StoryItem {...data} />
-      {/* <Toolbar {...data} /> */}
-      <View style={{ paddingBottom: 16 }} />
-      <StyledText bold>{props.comments} Comments</StyledText>
-      <View style={{ paddingBottom: 16 }} />
-      {data.children.map((child) => (
-        <CommentItem key={child.id} {...child} />
-      ))}
+      <FlatList
+        ListHeaderComponent={
+          <>
+            <StoryItem {...data} />
+            {/* <Toolbar {...data} /> */}
+            <View style={{ paddingBottom: 16 }} />
+            <StyledText bold>{props.comments} Comments</StyledText>
+            <View style={{ paddingBottom: 16 }} />
+          </>
+        }
+        style={{ backgroundColor: "black", padding: 8 }}
+        keyExtractor={(item) => item.id.toString()}
+        data={data.children}
+        renderItem={({ item }) => <CommentItem key={item.id} {...item} />}
+      />
     </>
   );
 };
@@ -178,9 +184,7 @@ export default function Story(props: { navigation: any; route: any }) {
   return (
     <SafeAreaView>
       <StatusBar />
-      <ScrollView style={{ backgroundColor: "black", padding: 8 }}>
-        <StoryView {...props.route.params} />
-      </ScrollView>
+      <StoryView {...props.route.params} />
     </SafeAreaView>
   );
 }

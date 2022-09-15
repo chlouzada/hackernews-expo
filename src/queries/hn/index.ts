@@ -26,6 +26,15 @@ export const topStories = async () => {
   // return _mockTopStories
 };
 
+export const infiniteTopStories = async (limit: number, cursor?: number) => {
+  const url = `${vercel_base_url}/api/trpc/hn.infiniteTopStories?batch=1&input={"0":{"json":{"limit":${limit},"cursor":${
+    cursor ?? "null"
+  }}}}`;
+  const response = await fetch(url);
+  const data = await response.json();
+  return data[0].result.data.json as { items: Story[]; nextCursor?: number };
+};
+
 const _story = async (id: number) => {
   const url = `${vercel_base_url}/api/trpc/hn.story?batch=1&input={"0":{"json":{"id":${id}}}}`;
   const response = await fetch(url);

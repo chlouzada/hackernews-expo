@@ -9,11 +9,11 @@ import {
   View,
 } from "react-native";
 import { useQuery } from "react-query";
-import { story } from "../queries/hn";
+import { story } from "../queries";
 import { date } from "../utils/date";
 import { SafeAreaView } from "react-native-safe-area-context";
 import StyledText from "../components/StyledText";
-import { Comment, StoryWithContent } from "../queries/hn/interfaces";
+import { Comment, StoryWithContent } from "../queries/interfaces";
 import { useWindowDimensions } from "react-native";
 import LoadingView from "../views/LoadingView";
 import ErrorView from "../views/ErrorView";

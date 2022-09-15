@@ -8,14 +8,16 @@ import {
   View,
 } from "react-native";
 import { useQuery } from "react-query";
-import { topStories } from "../queries/hn";
+import { topStories } from "../queries";
 import { date } from "../utils/date";
 import StyledText from "../components/StyledText";
 import LoadingView from "../views/LoadingView";
 import ErrorView from "../views/ErrorView";
 import { defaults } from "../styles/defaults";
+import StyledView from "../components/StyledView";
 
 const StoryItem = (props: {
+  index: number;
   navigation: any;
   data: {
     id: number;
@@ -39,7 +41,10 @@ const StoryItem = (props: {
       }
     >
       <View>
-        <StyledText size="2xl" text={props.data.title} />
+        <StyledView flex direction="row">
+          <StyledText  bold  size="xs" style={{ lineHeight: 28, paddingRight: 4,opacity: 0.5 }}>{props.index + 1}.</StyledText>
+          <StyledText bold size="lg">{props.data.title}</StyledText>
+        </StyledView>
         <View>
           <StyledText
             size="xs"
@@ -74,8 +79,9 @@ const TopStoriesView = (props: { navigation: any }) => {
     <FlatList
       keyExtractor={(item, index) => index.toString()}
       data={data}
-      renderItem={({ item }) => (
+      renderItem={({ item, index }) => (
         <StoryItem
+          index={index}
           key={item.id}
           navigation={props.navigation}
           data={{

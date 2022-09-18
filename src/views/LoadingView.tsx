@@ -10,7 +10,6 @@ export default function LoadingView() {
       style={[
         defaults.app,
         {
-          backgroundColor: "black",
           height: height,
           display: "flex",
           justifyContent: "center",

@@ -37,27 +37,28 @@ const CommentItem = ({
     const n = _level % 4;
 
     const styles: StyleProp<TextStyle> = {
-      opacity: 0.66,
-      marginTop: 2,
-      marginBottom: 12,
+      // opacity: 0.66,
+      marginTop: 12,
       marginLeft: 10 * _level,
       padding: 2,
+      paddingBottom: 16,
       borderRadius: 4,
       backgroundColor: undefined,
       marginRight: _level === -1 ? undefined : 8,
     };
 
-    if (n === 0) styles.backgroundColor = "rgb(96,165,250)";
-    if (n === 1) styles.backgroundColor = "rgb(74,222,128)";
-    if (n === 2) styles.backgroundColor = "rgb(250,204,21)";
-    if (n === 3) styles.backgroundColor = "rgb(248,113,113)";
+    if (n === 0) styles.backgroundColor = "rgb(229, 181, 103)";
+    if (n === 1) styles.backgroundColor = "rgb(180, 210, 115)";
+    if (n === 2) styles.backgroundColor = "rgb(232, 125, 62)";
+    if (n === 3) styles.backgroundColor = "rgb(158, 134, 200)";
+    if (n === 4) styles.backgroundColor = "rgb(176, 82, 121)";
+    if (n === 5) styles.backgroundColor = "rgb(108, 153, 187)";
 
     return styles;
   };
 
   const reducedWidth =
-    (_level === -1 ? width : width - 15.6 * _level) -
-    defaults.app.padding * 2;
+    (_level === -1 ? width : width - 15.6 * _level) - defaults.app.padding * 2;
 
   return (
     <View
@@ -70,25 +71,31 @@ const CommentItem = ({
       <View style={barStyle()} />
       <View
         style={{
+          position: "relative",
           flex: 1,
         }}
       >
+        <View style={{ width: "100%", maxWidth: reducedWidth }}>
+          <Html html={text} width={reducedWidth} />
+        </View>
         <View
           style={{
+            position: "absolute",
+            // stick to bottom
+            bottom: -4,
+
             flex: 1,
             flexDirection: "row",
             justifyContent: "space-between",
+            width: "100%",
           }}
         >
-          <StyledText size="xs" text={author} style={{ opacity: 0.4 }} />
+          <StyledText size="xs" text={author} style={{ color: "#797979" }} />
           <StyledText
             size="xs"
             text={date(created_at)}
-            style={{ opacity: 0.4 }}
+            style={{ color: "#797979" }}
           />
-        </View>
-        <View style={{ width: "100%", maxWidth: reducedWidth }}>
-          <Html html={text} width={reducedWidth} />
         </View>
       </View>
     </View>
@@ -103,12 +110,14 @@ const StoryItem = ({
   author,
   text,
 }: StoryWithContent) => {
+  const { width } = useWindowDimensions();
   return (
     <View>
       <StyledText size="2xl" text={title} />
 
-      {/* TODO: HTML RENDER */}
-      <StyledText text={text} />
+      {/* <View style={{ width: "100%", maxWidth: reducedWidth }}> */}
+      <Html html={text} width={width} />
+      {/* </View> */}
 
       <View
         style={{
@@ -120,7 +129,7 @@ const StoryItem = ({
         <StyledText
           size="xs"
           text={`${author} (${points})`}
-          style={{ opacity: 0.4 }}
+          style={{ color: "#797979" }}
         />
         <StyledText
           size="xs"
@@ -179,6 +188,7 @@ const StoryView = (props: { id: number; title: string; comments: number }) => {
             <View style={{ paddingBottom: 16 }} />
           </>
         }
+        ItemSeparatorComponent={() => <View style={{ paddingBottom: 16 }} />}
         keyExtractor={(item) => item.comment.id.toString()}
         data={comments}
         renderItem={({ item }) => (

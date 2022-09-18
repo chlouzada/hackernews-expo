@@ -22,7 +22,7 @@ export default function StyledText({
     bold && { fontWeight: "bold" },
   ];
   return (
-    <Text style={[{ color: "white" }, styleProps, style]}>
+    <Text lineBreakMode="tail" textBreakStrategy="balanced" style={[{ color: "white" }, styleProps, style]}>
       {text ?? children}
     </Text>
   );

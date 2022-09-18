@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 export const defaults = StyleSheet.create({
   app: {
-    backgroundColor: "#000",
-    padding: 10,
+    backgroundColor: "#2a2a2a",
+    padding: 16,
   },
 });

@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Dimensions,
-  FlatList,
-  SafeAreaView,
-  StatusBar,
-  TouchableHighlight,
-  View,
-} from "react-native";
+import { FlatList, SafeAreaView, StatusBar, View } from "react-native";
 import { useQuery } from "react-query";
 import { topStories } from "../queries";
 import LoadingView from "../views/LoadingView";
@@ -20,34 +13,30 @@ const TopStoriesView = (props: { navigation: any }) => {
   if (isLoading) return <LoadingView />;
   if (isError) return <ErrorView />;
 
+  console.log(data);
+
   return (
     <FlatList
-      keyExtractor={(item, index) => item.id.toString()}
+      keyExtractor={(item, index) => index.toString()}
       data={data}
-      ItemSeparatorComponent={() => (
-        <View
-          style={{
-            marginTop: 8,
-            marginBottom: 8,
-            // backgroundColor: "gray",
-          }}
-        />
-      )}
-      renderItem={({ item, index }) => (
-        <StoryItem
-          index={index}
-          key={item.id}
-          navigation={props.navigation}
-          data={{
-            id: item.id,
-            title: item.title,
-            score: item.score,
-            author: item.by,
-            comments: item.descendants,
-            createdAt: new Date(item.time * 1000).toISOString(),
-          }}
-        />
-      )}
+      renderItem={({ item, index }) => {
+        if (!item) return null;
+        return (
+          <StoryItem
+            index={index}
+            key={item.id}
+            navigation={props.navigation}
+            data={{
+              id: item.id,
+              title: item.title,
+              score: item.score,
+              author: item.by,
+              comments: item.descendants,
+              createdAt: new Date(item.time * 1000).toISOString(),
+            }}
+          />
+        );
+      }}
     />
   );
 };

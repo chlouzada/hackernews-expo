@@ -14,7 +14,7 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="Search"
+          initialRouteName="Top Stories"
           screenOptions={{
             headerShown: false,
           }}

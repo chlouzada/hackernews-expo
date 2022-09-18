@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "HN Reader",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "slug": "hn-reader",
     "extra": {
       "eas": {
@@ -9,7 +9,7 @@
       }
     },
     "android": {
-      "versionCode": 5,
+      "versionCode": 6,
       "package": "com.chlou.hnreader"
     }
   }

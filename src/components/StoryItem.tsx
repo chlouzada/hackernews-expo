@@ -28,7 +28,7 @@ export const StoryItem = (props: {
         })
       }
     >
-      <View>
+      <View style={{paddingBottom: 16}}>
         <StyledText bold size="xs" style={{ color: "#797979" }}>
           {props.index + 1}.{"  "}
           <StyledText bold size="lg">

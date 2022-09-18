@@ -35,17 +35,13 @@ const Toolbar = ({ id, title, url }: StoryWithContent) => {
 };
 
 const SearchView = (props: { navigation: any }) => {
-  const height = Dimensions.get("window").height;
-
   const [query, setQuery] = useState("");
   const debounced = useDebouncedValue(query, 700);
+  const height = Dimensions.get("window").height;
 
   const { data, isLoading, isError } = useQuery(
     ["search", debounced],
-    async () => {
-      console.log("search query", debounced);
-      return search({ query: debounced });
-    },
+    async () => search({ query: debounced }),
     { enabled: !!debounced }
   );
 

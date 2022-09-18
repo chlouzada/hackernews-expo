@@ -6,6 +6,7 @@ import LoadingView from "../views/LoadingView";
 import ErrorView from "../views/ErrorView";
 import { defaults } from "../styles/defaults";
 import { StoryItem } from "../components/StoryItem";
+import Header from "../components/Header";
 
 const TopStoriesView = (props: { navigation: any }) => {
   const { data, isLoading, isError } = useQuery(["topStories"], topStories);
@@ -13,12 +14,12 @@ const TopStoriesView = (props: { navigation: any }) => {
   if (isLoading) return <LoadingView />;
   if (isError) return <ErrorView />;
 
-  console.log(data);
-
   return (
     <FlatList
       keyExtractor={(item, index) => index.toString()}
       data={data}
+      ListHeaderComponent={() => <Header navigation={props.navigation} />}
+      ItemSeparatorComponent={() => <View style={{ paddingBottom: 16 }} />}
       renderItem={({ item, index }) => {
         if (!item) return null;
         return (

@@ -28,10 +28,10 @@ export const StoryItem = (props: {
         })
       }
     >
-      <View style={{paddingBottom: 16}}>
+      <View>
         <StyledText bold size="xs" style={{ color: "#797979" }}>
-          {props.index + 1}.{"  "}
-          <StyledText bold size="lg">
+          {props.index + 1}.{" "}
+          <StyledText bold size="lg" style={{lineHeight: 24}}>
             {props.data.title}
           </StyledText>
         </StyledText>

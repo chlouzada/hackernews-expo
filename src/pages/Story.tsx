@@ -4,9 +4,10 @@ import {
   FlatList,
   StatusBar,
   StyleProp,
-  TextStyle,
+  Text,
   TouchableHighlight,
   View,
+  ViewStyle,
 } from "react-native";
 import { useQuery } from "react-query";
 import { story } from "../queries";
@@ -75,26 +76,14 @@ const CommentItem = ({
   if (!text) return null;
   if (!isHidden) return null;
 
-  const barStyle = () => {
-    if (_level === -1) return;
+  const color = () => {
     const n = _level % 4;
-
-    const styles: StyleProp<TextStyle> = {
-      // marginTop: 12,
-      marginLeft: 10 * _level,
-      padding: 2,
-      borderRadius: 4,
-      marginRight: _level === -1 ? undefined : 8,
-    };
-
-    if (n === 0) styles.backgroundColor = "rgb(229, 181, 103)";
-    if (n === 1) styles.backgroundColor = "rgb(180, 210, 115)";
-    if (n === 2) styles.backgroundColor = "rgb(232, 125, 62)";
-    if (n === 3) styles.backgroundColor = "rgb(158, 134, 200)";
-    if (n === 4) styles.backgroundColor = "rgb(176, 82, 121)";
-    if (n === 5) styles.backgroundColor = "rgb(108, 153, 187)";
-
-    return styles;
+    if (n === 0) return { backgroundColor: "rgb(229, 181, 103)" };
+    if (n === 1) return { backgroundColor: "rgb(180, 210, 115)" };
+    if (n === 2) return { backgroundColor: "rgb(232, 125, 62)" };
+    if (n === 3) return { backgroundColor: "rgb(158, 134, 200)" };
+    if (n === 4) return { backgroundColor: "rgb(176, 82, 121)" };
+    if (n === 5) return { backgroundColor: "rgb(108, 153, 187)" };
   };
 
   const reducedWidth =
@@ -104,29 +93,33 @@ const CommentItem = ({
     <>
       <TouchableHighlight onPress={toggle}>
         <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            width: "100%",
-          }}
+          style={[
+            {
+              display: "flex",
+              flexDirection: "row",
+              width: "100%",
+            },
+            isCollapsed && { paddingBottom: 12 },
+          ]}
         >
-          <View style={barStyle()} />
+          <View
+            style={[
+              _level != -1 && {
+                marginLeft: 10 * _level,
+                padding: 2,
+                borderRadius: 4,
+                marginRight: _level === -1 ? undefined : 8,
+              },
+              color(),
+              !isCollapsed && { marginBottom: 10 },
+            ]}
+          />
           <View
             style={{
               position: "relative",
               flex: 1,
             }}
           >
-            {/* @ts-ignore */}
-            <Collapsible
-              collapsed={isCollapsed}
-              style={{
-                width: "100%",
-                maxWidth: reducedWidth,
-              }}
-            >
-              <Html html={text} width={reducedWidth} />
-            </Collapsible>
             <View
               style={{
                 flex: 1,
@@ -137,7 +130,7 @@ const CommentItem = ({
             >
               <StyledText
                 size="xs"
-                text={author + " " + id}
+                text={author}
                 style={{ color: "#797979" }}
               />
               <StyledText
@@ -146,10 +139,20 @@ const CommentItem = ({
                 style={{ color: "#797979" }}
               />
             </View>
+            {/* @ts-ignore */}
+            <Collapsible
+              collapsed={isCollapsed}
+              style={{
+                width: "100%",
+                maxWidth: reducedWidth,
+              }}
+            >
+              <Html html={text} width={reducedWidth} />
+            </Collapsible>
           </View>
         </View>
       </TouchableHighlight>
-      <View style={{ paddingBottom: 16 }} />
+      <View style={{ paddingBottom: 20 }} />
     </>
   );
 };
@@ -167,9 +170,7 @@ const StoryItem = ({
     <View>
       <StyledText size="2xl" text={title} />
 
-      {/* <View style={{ width: "100%", maxWidth: reducedWidth }}> */}
-      <Html html={text} width={width} />
-      {/* </View> */}
+      {text && <Html html={text} width={width} />}
 
       <View
         style={{
@@ -216,6 +217,8 @@ const StoryView = (props: { id: number; title: string; comments: number }) => {
   if (isLoading) return <LoadingView />;
   if (isError) return <ErrorView />;
 
+  const comments = getComments(data?.children).filter((c) => c.comment.text);
+
   return (
     <CollapseContext.Provider value={{ collapsed, collapse }}>
       <FlatList
@@ -229,7 +232,7 @@ const StoryView = (props: { id: number; title: string; comments: number }) => {
           </>
         }
         keyExtractor={(item) => item.comment.id.toString()}
-        data={getComments(data?.children)}
+        data={comments}
         renderItem={({ item }) => (
           <CommentItem
             key={item.comment.id}

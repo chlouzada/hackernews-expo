@@ -218,7 +218,6 @@ export default function StoryScreen({
     else setCollapsed([...collapsed, id]);
   };
 
-  if (isLoading) return <LoadingView />;
   if (isError) return <ErrorView />;
 
   return (
@@ -237,7 +236,11 @@ export default function StoryScreen({
             }
             estimatedItemSize={200}
             keyExtractor={(item) => item.comment.id.toString()}
-            data={getComments(data?.children).filter((c) => c.comment.text)}
+            data={
+              isLoading
+                ? []
+                : getComments(data?.children).filter((c) => c.comment.text)
+            }
             renderItem={({ item }) => (
               <CommentItem
                 key={item.comment.id}

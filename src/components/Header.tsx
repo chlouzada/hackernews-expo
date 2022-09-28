@@ -1,9 +1,12 @@
 import React from "react";
 import { TouchableHighlight } from "react-native";
+import { useNavigation } from "../hooks/useNavigation";
 import StyledText from "./StyledText";
 import StyledView from "./StyledView";
 
-export default function Header({ navigation }: { navigation: any }) {
+export default function Header() {
+  const navigation = useNavigation();
+
   return (
     <StyledView>
       <StyledView

@@ -12,32 +12,19 @@ import {
 } from "react-native";
 import { useQuery } from "react-query";
 import { search, story } from "../queries";
-import { date } from "../utils/date";
 import { SafeAreaView } from "react-native-safe-area-context";
 import StyledText from "../components/StyledText";
-import { Comment, StoryWithContent } from "../queries/interfaces";
-import { useWindowDimensions } from "react-native";
 import LoadingView from "../views/LoadingView";
 import ErrorView from "../views/ErrorView";
-import { Html } from "../components/Html";
-import { defaults } from "../styles/defaults";
 import { useDebouncedValue } from "../hooks/useDebouncedValue";
-import { StoryItem } from "../components/StoryItem";
+import { StoryItemList } from "../components/StoryItemList";
 import StyledView from "../components/StyledView";
 
-const Toolbar = ({ id, title, url }: StoryWithContent) => {
-  return (
-    <View style={{ flex: 1, flexDirection: "row" }}>
-      <Button onPress={() => alert(id)} title="Id" />
-      <Button onPress={() => alert(url)} title="url" />
-    </View>
-  );
-};
-
-const SearchView = (props: { navigation: any }) => {
+export default function SearchScreen() {
   const [query, setQuery] = useState("");
-  const debounced = useDebouncedValue(query, 700);
   const height = Dimensions.get("window").height;
+
+  const debounced = useDebouncedValue(query, 700);
 
   const { data, isLoading, isError } = useQuery(
     ["search", debounced],
@@ -46,8 +33,7 @@ const SearchView = (props: { navigation: any }) => {
   );
 
   return (
-    <>
-      {/* <StyledView style={{ flex: 1, flexDirection: "row" }}> */}
+    <SafeAreaView>
       <TextInput
         autoFocus
         style={
@@ -64,7 +50,6 @@ const SearchView = (props: { navigation: any }) => {
         value={query}
         placeholder="Search Stories"
       />
-      {/* </StyledView> */}
 
       {isLoading && <LoadingView />}
       {isError && <ErrorView />}
@@ -80,10 +65,9 @@ const SearchView = (props: { navigation: any }) => {
             </StyledText>
           )}
           renderItem={({ item, index }) => (
-            <StoryItem
-              navigation={props.navigation}
-              index={index}
-              data={{
+            <StoryItemList
+              {...{
+                index,
                 author: item.author,
                 comments: item.num_comments,
                 createdAt: item.created_at,
@@ -101,17 +85,6 @@ const SearchView = (props: { navigation: any }) => {
           }}
         ></StyledView>
       )}
-    </>
-  );
-};
-
-export default function Search(props: { navigation: any }) {
-  return (
-    <SafeAreaView>
-      <View style={defaults.app}>
-        <StatusBar barStyle="dark-content" />
-        <SearchView navigation={props.navigation} />
-      </View>
     </SafeAreaView>
   );
 }

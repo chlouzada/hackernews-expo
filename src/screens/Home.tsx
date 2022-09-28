@@ -1,14 +1,13 @@
 import React from "react";
-import { FlatList, SafeAreaView, StatusBar, View } from "react-native";
+import { FlatList, SafeAreaView, View } from "react-native";
 import { useQuery } from "react-query";
 import { topStories } from "../queries";
 import LoadingView from "../views/LoadingView";
 import ErrorView from "../views/ErrorView";
-import { defaults } from "../styles/defaults";
-import { StoryItem } from "../components/StoryItem";
+import { StoryItemList } from "../components/StoryItemList";
 import Header from "../components/Header";
 
-const TopStoriesView = (props: { navigation: any }) => {
+const TopStoriesView = () => {
   const { data, isLoading, isError } = useQuery(["topStories"], topStories);
 
   if (isLoading) return <LoadingView />;
@@ -16,18 +15,16 @@ const TopStoriesView = (props: { navigation: any }) => {
 
   return (
     <FlatList
-      keyExtractor={(item, index) => index.toString()}
+      keyExtractor={(item) => item.id.toString()}
       data={data}
-      ListHeaderComponent={() => <Header navigation={props.navigation} />}
+      ListHeaderComponent={() => <Header />}
       ItemSeparatorComponent={() => <View style={{ paddingBottom: 16 }} />}
       renderItem={({ item, index }) => {
         if (!item) return null;
         return (
-          <StoryItem
-            index={index}
-            key={item.id}
-            navigation={props.navigation}
-            data={{
+          <StoryItemList
+            {...{
+              index: index,
               id: item.id,
               title: item.title,
               score: item.score,
@@ -42,13 +39,11 @@ const TopStoriesView = (props: { navigation: any }) => {
   );
 };
 
-export default function TopStories(props: { navigation: any }) {
+export default function HomeScreen() {
   return (
     <SafeAreaView>
-      <View style={defaults.app}>
-        <StatusBar barStyle="dark-content" />
-        <TopStoriesView {...props} />
-      </View>
+      {/* <StatusBar /> */}
+      <TopStoriesView />
     </SafeAreaView>
   );
 }

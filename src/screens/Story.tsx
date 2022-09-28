@@ -1,15 +1,11 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import {
   Button,
   FlatList,
   StatusBar,
-  StyleProp,
-  Text,
   TouchableHighlight,
   View,
-  ViewStyle,
 } from "react-native";
-import { useQuery } from "react-query";
 import { story } from "../queries";
 import { date } from "../utils/date";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -21,6 +17,9 @@ import ErrorView from "../views/ErrorView";
 import { Html } from "../components/Html";
 import { defaults } from "../styles/defaults";
 import Collapsible from "react-native-collapsible";
+import { RootStackParamList, StoryParams } from "../navigation/types";
+import { useQuery } from "react-query";
+import { StackScreenProps } from "@react-navigation/stack";
 
 const map = new Map<number, number[]>();
 
@@ -203,11 +202,15 @@ const Toolbar = ({ id, title, url }: StoryWithContent) => {
   );
 };
 
-const StoryView = (props: { id: number; title: string; comments: number }) => {
+type ArticleScreenProps = StackScreenProps<RootStackParamList, "Story">;
+
+export default function StoryScreen({
+  route: {
+    params: { id, comments },
+  },
+}: ArticleScreenProps) {
   const [collapsed, setCollapsed] = useState<number[]>([]);
-  const { data, isLoading, isError } = useQuery(["story", props.id], () =>
-    story(props.id)
-  );
+  const { data, isLoading, isError } = useQuery(["story", id], () => story(id));
 
   const collapse = (id: number) => {
     if (collapsed.includes(id)) setCollapsed(collapsed.filter((i) => i !== id));
@@ -217,41 +220,30 @@ const StoryView = (props: { id: number; title: string; comments: number }) => {
   if (isLoading) return <LoadingView />;
   if (isError) return <ErrorView />;
 
-  const comments = getComments(data?.children).filter((c) => c.comment.text);
-
-  return (
-    <CollapseContext.Provider value={{ collapsed, collapse }}>
-      <FlatList
-        ListHeaderComponent={
-          <>
-            <StoryItem {...data} />
-            {/* <Toolbar {...data} /> */}
-            <View style={{ paddingBottom: 16 }} />
-            <StyledText bold>{props.comments} Comments</StyledText>
-            <View style={{ paddingBottom: 16 }} />
-          </>
-        }
-        keyExtractor={(item) => item.comment.id.toString()}
-        data={comments}
-        renderItem={({ item }) => (
-          <CommentItem
-            key={item.comment.id}
-            {...item.comment}
-            _level={item._level}
-          />
-        )}
-      />
-    </CollapseContext.Provider>
-  );
-};
-
-export default function Story(props: { navigation: any; route: any }) {
   return (
     <SafeAreaView>
-      <View style={defaults.app}>
-        <StatusBar />
-        <StoryView {...props.route.params} />
-      </View>
+      <CollapseContext.Provider value={{ collapsed, collapse }}>
+        <FlatList
+          ListHeaderComponent={
+            <>
+              <StoryItem {...data} />
+              {/* <Toolbar {...data} /> */}
+              <View style={{ paddingBottom: 16 }} />
+              <StyledText bold>{comments} Comments</StyledText>
+              <View style={{ paddingBottom: 16 }} />
+            </>
+          }
+          keyExtractor={(item) => item.comment.id.toString()}
+          data={getComments(data?.children).filter((c) => c.comment.text)}
+          renderItem={({ item }) => (
+            <CommentItem
+              key={item.comment.id}
+              {...item.comment}
+              _level={item._level}
+            />
+          )}
+        />
+      </CollapseContext.Provider>
     </SafeAreaView>
   );
 }

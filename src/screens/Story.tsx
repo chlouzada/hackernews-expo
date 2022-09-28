@@ -91,7 +91,7 @@ const CommentItem = ({
 
   return (
     <>
-      <TouchableHighlight onPress={toggle}>
+      <TouchableHighlight onPress={toggle} activeOpacity={1}>
         <View
           style={[
             {
@@ -224,7 +224,7 @@ export default function StoryScreen({
   return (
     <SafeAreaView>
       <CollapseContext.Provider value={{ collapsed, collapse }}>
-        <View style={{ height: "100%" }}>
+        <View style={{ height: "100%", backgroundColor: "black" }}>
           <FlashList
             ListHeaderComponent={
               <>

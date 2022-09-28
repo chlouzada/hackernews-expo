@@ -18,12 +18,12 @@ export const StoryItemList = (props: {
   return (
     <TouchableHighlight
       key={props.index}
-      activeOpacity={0.6}
+      activeOpacity={1}
       onPress={() =>
         navigation.navigate("Story", {
-          id: 32891624,
-          title: "TITLE",
-          comments: 123,
+          id: props.id,
+          title: props.title,
+          comments: props.comments,
         })
       }
     >

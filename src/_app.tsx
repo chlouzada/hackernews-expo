@@ -9,9 +9,8 @@ const queryClient = new QueryClient();
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <SafeAreaProvider style={{padding: 16, backgroundColor: "black"}}>
+      <SafeAreaProvider style={{ padding: 16, backgroundColor: "black" }}>
         <StatusBar />
-
         <Navigation />
       </SafeAreaProvider>
     </QueryClientProvider>

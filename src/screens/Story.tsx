@@ -20,6 +20,7 @@ import Collapsible from "react-native-collapsible";
 import { RootStackParamList, StoryParams } from "../navigation/types";
 import { useQuery } from "react-query";
 import { StackScreenProps } from "@react-navigation/stack";
+import { FlashList } from "@shopify/flash-list";
 
 const map = new Map<number, number[]>();
 
@@ -223,26 +224,29 @@ export default function StoryScreen({
   return (
     <SafeAreaView>
       <CollapseContext.Provider value={{ collapsed, collapse }}>
-        <FlatList
-          ListHeaderComponent={
-            <>
-              <StoryItem {...data} />
-              {/* <Toolbar {...data} /> */}
-              <View style={{ paddingBottom: 16 }} />
-              <StyledText bold>{comments} Comments</StyledText>
-              <View style={{ paddingBottom: 16 }} />
-            </>
-          }
-          keyExtractor={(item) => item.comment.id.toString()}
-          data={getComments(data?.children).filter((c) => c.comment.text)}
-          renderItem={({ item }) => (
-            <CommentItem
-              key={item.comment.id}
-              {...item.comment}
-              _level={item._level}
-            />
-          )}
-        />
+        <View style={{ height: "100%" }}>
+          <FlashList
+            ListHeaderComponent={
+              <>
+                <StoryItem {...data} />
+                {/* <Toolbar {...data} /> */}
+                <View style={{ paddingBottom: 16 }} />
+                <StyledText bold>{comments} Comments</StyledText>
+                <View style={{ paddingBottom: 16 }} />
+              </>
+            }
+            estimatedItemSize={200}
+            keyExtractor={(item) => item.comment.id.toString()}
+            data={getComments(data?.children).filter((c) => c.comment.text)}
+            renderItem={({ item }) => (
+              <CommentItem
+                key={item.comment.id}
+                {...item.comment}
+                _level={item._level}
+              />
+            )}
+          />
+        </View>
       </CollapseContext.Provider>
     </SafeAreaView>
   );

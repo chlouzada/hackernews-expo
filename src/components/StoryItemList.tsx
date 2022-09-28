@@ -15,12 +15,9 @@ export const StoryItemList = (props: {
   createdAt: string;
 }) => {
   const navigation = useNavigation();
-
-  console.log(props)
-
   return (
     <TouchableHighlight
-      key={props.id}
+      key={props.index}
       activeOpacity={0.6}
       onPress={() =>
         navigation.navigate("Story", {

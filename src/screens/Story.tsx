@@ -1,27 +1,22 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import {
-  Button,
-  FlatList,
-  StatusBar,
-  TouchableHighlight,
-  View,
-} from 'react-native';
-import { story } from '../queries';
+import { Button, TouchableHighlight, View } from 'react-native';
 import { date } from '../utils/date';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import StyledText from '../components/StyledText';
-import { Comment, StoryWithContent } from '../queries/interfaces';
 import { useWindowDimensions } from 'react-native';
-import LoadingView from '../views/LoadingView';
 import ErrorView from '../views/ErrorView';
 import { Html } from '../components/Html';
 import { defaults } from '../styles/defaults';
 import Collapsible from 'react-native-collapsible';
-import { RootStackParamList, StoryParams } from '../navigation/types';
-import { useQuery } from 'react-query';
+import { RootStackParamList } from '../navigation/types';
 import { StackScreenProps } from '@react-navigation/stack';
 import { FlashList } from '@shopify/flash-list';
 import { trpc } from '../utils/trpc';
+import { AppRouter } from '@chlou/hn-trpc';
+import { inferProcedureOutput } from '@trpc/server';
+
+type Story = inferProcedureOutput<AppRouter['hackernews']['storyById']>;
+type Comment = Story['children'][number];
 
 const map = new Map<number, number[]>();
 
@@ -158,14 +153,7 @@ const CommentItem = ({
   );
 };
 
-const StoryItem = ({
-  title,
-  url,
-  points,
-  created_at,
-  author,
-  text,
-}: StoryWithContent) => {
+const StoryItem = ({ title, url, points, created_at, author, text }: Story) => {
   const { width } = useWindowDimensions();
   return (
     <View>
@@ -195,7 +183,7 @@ const StoryItem = ({
   );
 };
 
-const Toolbar = ({ id, title, url }: StoryWithContent) => {
+const Toolbar = ({ id, title, url }: Story) => {
   return (
     <View style={{ flex: 1, flexDirection: 'row' }}>
       <Button onPress={() => alert(id)} title="Id" />

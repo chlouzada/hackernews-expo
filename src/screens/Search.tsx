@@ -1,17 +1,5 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
-import {
-  Button,
-  Dimensions,
-  FlatList,
-  ScrollView,
-  StatusBar,
-  StyleProp,
-  TextInput,
-  TextStyle,
-  View,
-} from 'react-native';
-import { useQuery } from 'react-query';
-import { search, story } from '../queries';
+import React, { useState } from 'react';
+import { Dimensions, FlatList, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import StyledText from '../components/StyledText';
 import LoadingView from '../views/LoadingView';

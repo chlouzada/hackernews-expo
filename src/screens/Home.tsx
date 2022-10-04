@@ -1,7 +1,5 @@
 import React from 'react';
-import { FlatList, SafeAreaView, View } from 'react-native';
-import { useQuery } from 'react-query';
-import { topStories } from '../queries';
+import { SafeAreaView, View } from 'react-native';
 import LoadingView from '../views/LoadingView';
 import ErrorView from '../views/ErrorView';
 import { StoryItemList } from '../components/StoryItemList';

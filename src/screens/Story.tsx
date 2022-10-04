@@ -1,26 +1,27 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from 'react';
 import {
   Button,
   FlatList,
   StatusBar,
   TouchableHighlight,
   View,
-} from "react-native";
-import { story } from "../queries";
-import { date } from "../utils/date";
-import { SafeAreaView } from "react-native-safe-area-context";
-import StyledText from "../components/StyledText";
-import { Comment, StoryWithContent } from "../queries/interfaces";
-import { useWindowDimensions } from "react-native";
-import LoadingView from "../views/LoadingView";
-import ErrorView from "../views/ErrorView";
-import { Html } from "../components/Html";
-import { defaults } from "../styles/defaults";
-import Collapsible from "react-native-collapsible";
-import { RootStackParamList, StoryParams } from "../navigation/types";
-import { useQuery } from "react-query";
-import { StackScreenProps } from "@react-navigation/stack";
-import { FlashList } from "@shopify/flash-list";
+} from 'react-native';
+import { story } from '../queries';
+import { date } from '../utils/date';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import StyledText from '../components/StyledText';
+import { Comment, StoryWithContent } from '../queries/interfaces';
+import { useWindowDimensions } from 'react-native';
+import LoadingView from '../views/LoadingView';
+import ErrorView from '../views/ErrorView';
+import { Html } from '../components/Html';
+import { defaults } from '../styles/defaults';
+import Collapsible from 'react-native-collapsible';
+import { RootStackParamList, StoryParams } from '../navigation/types';
+import { useQuery } from 'react-query';
+import { StackScreenProps } from '@react-navigation/stack';
+import { FlashList } from '@shopify/flash-list';
+import { trpc } from '../utils/trpc';
 
 const map = new Map<number, number[]>();
 
@@ -78,12 +79,12 @@ const CommentItem = ({
 
   const color = () => {
     const n = _level % 4;
-    if (n === 0) return { backgroundColor: "rgb(229, 181, 103)" };
-    if (n === 1) return { backgroundColor: "rgb(180, 210, 115)" };
-    if (n === 2) return { backgroundColor: "rgb(232, 125, 62)" };
-    if (n === 3) return { backgroundColor: "rgb(158, 134, 200)" };
-    if (n === 4) return { backgroundColor: "rgb(176, 82, 121)" };
-    if (n === 5) return { backgroundColor: "rgb(108, 153, 187)" };
+    if (n === 0) return { backgroundColor: 'rgb(229, 181, 103)' };
+    if (n === 1) return { backgroundColor: 'rgb(180, 210, 115)' };
+    if (n === 2) return { backgroundColor: 'rgb(232, 125, 62)' };
+    if (n === 3) return { backgroundColor: 'rgb(158, 134, 200)' };
+    if (n === 4) return { backgroundColor: 'rgb(176, 82, 121)' };
+    if (n === 5) return { backgroundColor: 'rgb(108, 153, 187)' };
   };
 
   const reducedWidth =
@@ -95,9 +96,9 @@ const CommentItem = ({
         <View
           style={[
             {
-              display: "flex",
-              flexDirection: "row",
-              width: "100%",
+              display: 'flex',
+              flexDirection: 'row',
+              width: '100%',
             },
             isCollapsed && { paddingBottom: 12 },
           ]}
@@ -116,34 +117,34 @@ const CommentItem = ({
           />
           <View
             style={{
-              position: "relative",
+              position: 'relative',
               flex: 1,
             }}
           >
             <View
               style={{
                 flex: 1,
-                flexDirection: "row",
-                justifyContent: "space-between",
-                width: "100%",
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                width: '100%',
               }}
             >
               <StyledText
                 size="xs"
                 text={author}
-                style={{ color: "#797979" }}
+                style={{ color: '#797979' }}
               />
               <StyledText
                 size="xs"
                 text={date(created_at)}
-                style={{ color: "#797979" }}
+                style={{ color: '#797979' }}
               />
             </View>
             {/* @ts-ignore */}
             <Collapsible
               collapsed={isCollapsed}
               style={{
-                width: "100%",
+                width: '100%',
                 maxWidth: reducedWidth,
               }}
             >
@@ -174,15 +175,15 @@ const StoryItem = ({
 
       <View
         style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
         }}
       >
         <StyledText
           size="xs"
           text={`${author} (${points})`}
-          style={{ color: "#797979" }}
+          style={{ color: '#797979' }}
         />
         <StyledText
           size="xs"
@@ -196,14 +197,14 @@ const StoryItem = ({
 
 const Toolbar = ({ id, title, url }: StoryWithContent) => {
   return (
-    <View style={{ flex: 1, flexDirection: "row" }}>
+    <View style={{ flex: 1, flexDirection: 'row' }}>
       <Button onPress={() => alert(id)} title="Id" />
       <Button onPress={() => alert(url)} title="url" />
     </View>
   );
 };
 
-type ArticleScreenProps = StackScreenProps<RootStackParamList, "Story">;
+type ArticleScreenProps = StackScreenProps<RootStackParamList, 'Story'>;
 
 export default function StoryScreen({
   route: {
@@ -211,19 +212,19 @@ export default function StoryScreen({
   },
 }: ArticleScreenProps) {
   const [collapsed, setCollapsed] = useState<number[]>([]);
-  const { data, isLoading, isError } = useQuery(["story", id], () => story(id));
+  const { data, isLoading, isError } = trpc.hackernews.storyById.useQuery(id);
 
   const collapse = (id: number) => {
     if (collapsed.includes(id)) setCollapsed(collapsed.filter((i) => i !== id));
     else setCollapsed([...collapsed, id]);
   };
 
-  if (isError) return <ErrorView />;
+  if (isError || !data) return <ErrorView />; // TODO: proper loading
 
   return (
     <SafeAreaView>
       <CollapseContext.Provider value={{ collapsed, collapse }}>
-        <View style={{ height: "100%", backgroundColor: "black" }}>
+        <View style={{ height: '100%', backgroundColor: 'black' }}>
           <FlashList
             ListHeaderComponent={
               <>

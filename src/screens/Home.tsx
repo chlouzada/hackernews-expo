@@ -1,22 +1,23 @@
-import React from "react";
-import { FlatList, SafeAreaView, View } from "react-native";
-import { useQuery } from "react-query";
-import { topStories } from "../queries";
-import LoadingView from "../views/LoadingView";
-import ErrorView from "../views/ErrorView";
-import { StoryItemList } from "../components/StoryItemList";
-import Header from "../components/Header";
-import { FlashList } from "@shopify/flash-list";
-import StyledView from "../components/StyledView";
+import React from 'react';
+import { FlatList, SafeAreaView, View } from 'react-native';
+import { useQuery } from 'react-query';
+import { topStories } from '../queries';
+import LoadingView from '../views/LoadingView';
+import ErrorView from '../views/ErrorView';
+import { StoryItemList } from '../components/StoryItemList';
+import Header from '../components/Header';
+import { FlashList } from '@shopify/flash-list';
+import StyledView from '../components/StyledView';
+import { trpc } from '../utils/trpc';
 
 const TopStoriesView = () => {
-  const { data, isLoading, isError } = useQuery(["topStories"], topStories);
+  const { data, isLoading, isError } = trpc.hackernews.topStories.useQuery();
 
   if (isLoading) return <LoadingView />;
   if (isError) return <ErrorView />;
 
   return (
-    <StyledView style={{ backgroundColor: "black", height: "100%" }}>
+    <StyledView style={{ backgroundColor: 'black', height: '100%' }}>
       <FlashList
         data={data}
         estimatedItemSize={100}

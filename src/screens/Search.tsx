@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import {
   Button,
   Dimensions,
@@ -9,26 +9,28 @@ import {
   TextInput,
   TextStyle,
   View,
-} from "react-native";
-import { useQuery } from "react-query";
-import { search, story } from "../queries";
-import { SafeAreaView } from "react-native-safe-area-context";
-import StyledText from "../components/StyledText";
-import LoadingView from "../views/LoadingView";
-import ErrorView from "../views/ErrorView";
-import { useDebouncedValue } from "../hooks/useDebouncedValue";
-import { StoryItemList } from "../components/StoryItemList";
-import StyledView from "../components/StyledView";
+} from 'react-native';
+import { useQuery } from 'react-query';
+import { search, story } from '../queries';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import StyledText from '../components/StyledText';
+import LoadingView from '../views/LoadingView';
+import ErrorView from '../views/ErrorView';
+import { useDebouncedValue } from '../hooks/useDebouncedValue';
+import { StoryItemList } from '../components/StoryItemList';
+import StyledView from '../components/StyledView';
+import { trpc } from '../utils/trpc';
 
 export default function SearchScreen() {
-  const [query, setQuery] = useState("");
-  const height = Dimensions.get("window").height;
+  const [query, setQuery] = useState('');
+  const height = Dimensions.get('window').height;
 
   const debounced = useDebouncedValue(query, 700);
 
-  const { data, isLoading, isError } = useQuery(
-    ["search", debounced],
-    async () => search({ query: debounced }),
+  const { data, isLoading, isError } = trpc.hackernews.search.useQuery(
+    {
+      query: debounced,
+    },
     { enabled: !!debounced }
   );
 
@@ -38,12 +40,12 @@ export default function SearchScreen() {
         autoFocus
         style={
           {
-            width: "100%",
+            width: '100%',
             borderBottomWidth: 2,
             padding: 10,
-            borderColor: "#e87d3e",
-            color: "white",
-            outline: "none",
+            borderColor: '#e87d3e',
+            color: 'white',
+            outline: 'none',
           } as any // ???
         }
         onChangeText={setQuery}
@@ -60,7 +62,7 @@ export default function SearchScreen() {
           keyExtractor={(item) => item.objectID}
           data={data.hits}
           ListHeaderComponent={() => (
-            <StyledText bold style={{ padding: 16, textAlign: "center" }}>
+            <StyledText bold style={{ padding: 16, textAlign: 'center' }}>
               {data.hits.length} results
             </StyledText>
           )}

@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Button,
+  RefreshControl,
   TouchableHighlight,
   View,
 } from 'react-native';
@@ -201,9 +202,8 @@ type StoryScreenProps = StackScreenProps<RootStackParamList, 'Story'>;
 
 export default function StoryScreen({ route: { params } }: StoryScreenProps) {
   const [collapsed, setCollapsed] = useState<number[]>([]);
-  const { data, isLoading, isError } = trpc.hackernews.storyById.useQuery(
-    params.id
-  );
+  const { data, isLoading, isError, isFetched, refetch } =
+    trpc.hackernews.storyById.useQuery(params.id);
 
   const collapse = (id: number) => {
     if (collapsed.includes(id)) setCollapsed(collapsed.filter((i) => i !== id));
@@ -217,6 +217,12 @@ export default function StoryScreen({ route: { params } }: StoryScreenProps) {
       <CollapseContext.Provider value={{ collapsed, collapse }}>
         <View style={{ height: '100%', backgroundColor: 'black' }}>
           <FlashList
+            refreshControl={
+              <RefreshControl
+                refreshing={isLoading && isFetched}
+                onRefresh={refetch}
+              />
+            }
             ListHeaderComponent={
               <>
                 <Header {...{ ...params, text: data?.text }} />

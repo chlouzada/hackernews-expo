@@ -1,9 +1,9 @@
-import React from "react";
-import { TouchableHighlight, View } from "react-native";
-import { useNavigation } from "../hooks/useNavigation";
-import { date } from "../utils/date";
-import StyledText from "./StyledText";
-import StyledView from "./StyledView";
+import React from 'react';
+import { TouchableHighlight, View } from 'react-native';
+import { useNavigation } from '../hooks/useNavigation';
+import { date } from '../utils/date';
+import StyledText from './StyledText';
+import StyledView from './StyledView';
 
 export const StoryItemList = (props: {
   index: number;
@@ -20,7 +20,7 @@ export const StoryItemList = (props: {
       key={props.index}
       activeOpacity={1}
       onPress={() =>
-        navigation.navigate("Story", {
+        navigation.navigate('Story', {
           id: props.id,
           title: props.title,
           comments: props.comments,
@@ -28,8 +28,8 @@ export const StoryItemList = (props: {
       }
     >
       <View>
-        <StyledText bold size="xs" style={{ color: "#797979" }}>
-          {props.index + 1}.{" "}
+        <StyledText bold size="sm">
+          {props.index + 1}.{' '}
           <StyledText bold size="lg" style={{ lineHeight: 24 }}>
             {props.title}
           </StyledText>
@@ -38,14 +38,14 @@ export const StoryItemList = (props: {
           <StyledText
             bold
             size="xs"
-            style={{ color: "#797979" }}
+            style={{ color: '#797979' }}
             text={`${props.comments ?? 0} comments (${props.score})`}
           />
 
           <StyledText
             size="xs"
             bold
-            style={{ color: "#797979" }}
+            style={{ color: '#797979' }}
             text={date(props.createdAt)}
           />
         </StyledView>

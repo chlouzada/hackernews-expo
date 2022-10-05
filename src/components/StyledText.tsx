@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleProp, Text, TextStyle } from "react-native";
+import React from 'react';
+import { StyleProp, Text, TextStyle } from 'react-native';
 
 export default function StyledText({
   text,
@@ -9,20 +9,22 @@ export default function StyledText({
   bold,
 }: {
   style?: StyleProp<TextStyle>;
-  size?: "2xl" | "lg" | "xs";
+  size?: '2xl' | 'lg' | 'xs' | 'sm';
   bold?: true;
-} & (
-  | { text?: string; children?: never }
-  | { text?: never; children: any }
-)) {
+} & ({ text?: string; children?: never } | { text?: never; children: any })) {
   const styleProps: any = [
-    size == "2xl" && { fontSize: 24, lineHeight: 32 },
-    size == "lg" && { fontSize: 18, lineHeight: 28 },
-    size == "xs" && { fontSize: 12, lineHeight: 16 },
-    bold && { fontWeight: "bold" },
+    size == '2xl' && { fontSize: 24, lineHeight: 32 },
+    size == 'lg' && { fontSize: 18, lineHeight: 28 },
+    size == 'xs' && { fontSize: 12, lineHeight: 16 },
+    size == 'sm' && { fontSize: 14, lineHeight: 20 },
+    bold && { fontWeight: 'bold' },
   ];
   return (
-    <Text lineBreakMode="tail" textBreakStrategy="balanced" style={[{ color: "white" }, styleProps, style]}>
+    <Text
+      lineBreakMode="tail"
+      textBreakStrategy="balanced"
+      style={[{ color: 'white' }, styleProps, style]}
+    >
       {text ?? children}
     </Text>
   );

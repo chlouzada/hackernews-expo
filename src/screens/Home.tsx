@@ -1,29 +1,78 @@
 import React from 'react';
-import { SafeAreaView, View } from 'react-native';
+import {
+  ActivityIndicator,
+  RefreshControl,
+  SafeAreaView,
+  TouchableHighlight,
+  View,
+} from 'react-native';
 import LoadingView from '../views/LoadingView';
 import ErrorView from '../views/ErrorView';
 import { StoryItemList } from '../components/StoryItemList';
-import Header from '../components/Header';
 import { FlashList } from '@shopify/flash-list';
 import StyledView from '../components/StyledView';
 import { trpc } from '../utils/trpc';
+import StyledText from '../components/StyledText';
+import navigation from '../navigation';
+import { inferProcedureOutput } from '@trpc/server';
+import { AppRouter } from '@chlou/hn-trpc';
+
+type TopStories = inferProcedureOutput<AppRouter['hackernews']['topStories']>;
+
+const Header = () => {
+  return (
+    <StyledView>
+      <StyledView
+        flex
+        direction="row"
+        justifyContent="space-between"
+        style={{
+          alignItems: 'center',
+        }}
+      >
+        <StyledText bold style={{ fontSize: 30 }}>
+          Top Stories
+        </StyledText>
+        <TouchableHighlight onPress={() => {}}>
+          <StyledText bold style={{ padding: 8, paddingHorizontal: 16 }}>
+            Search
+          </StyledText>
+        </TouchableHighlight>
+      </StyledView>
+      <StyledView
+        style={{
+          marginTop: 16,
+          marginBottom: 16,
+          padding: 1,
+          backgroundColor: '#797979',
+          borderRadius: 4,
+        }}
+      />
+    </StyledView>
+  );
+};
 
 const TopStoriesView = () => {
-  const { data, isLoading, isError } = trpc.hackernews.topStories.useQuery();
+  const { data, isError, isLoading, refetch, isFetched } =
+    trpc.hackernews.topStories.useQuery();
 
-  if (isLoading) return <LoadingView />;
   if (isError) return <ErrorView />;
 
   return (
     <StyledView style={{ backgroundColor: 'black', height: '100%' }}>
       <FlashList
+        refreshControl={
+          <RefreshControl
+            refreshing={isLoading && isFetched}
+            onRefresh={refetch}
+          />
+        }
         data={data}
         estimatedItemSize={100}
         keyExtractor={(item) => item.id.toString()}
         ListHeaderComponent={() => <Header />}
         ItemSeparatorComponent={() => <View style={{ paddingBottom: 16 }} />}
         renderItem={({ item, index }) => {
-          if (!item) return null;
           return (
             <StoryItemList
               {...{
@@ -39,6 +88,11 @@ const TopStoriesView = () => {
           );
         }}
       />
+      {isLoading && (
+        <ActivityIndicator
+          style={{ position: 'absolute', top: 0, right: 0, left: 0, bottom: 0 }}
+        />
+      )}
     </StyledView>
   );
 };

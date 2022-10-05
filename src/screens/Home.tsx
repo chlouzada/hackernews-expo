@@ -63,7 +63,7 @@ const TopStoriesView = () => {
   if (isError) return <ErrorView />;
 
   return (
-    <StyledView style={{ backgroundColor: 'black', height: '100%' }}>
+    <View className="bg-black h-full">
       <FlashList
         refreshControl={
           <RefreshControl
@@ -97,7 +97,7 @@ const TopStoriesView = () => {
           style={{ position: 'absolute', top: 0, right: 0, left: 0, bottom: 0 }}
         />
       )}
-    </StyledView>
+    </View>
   );
 };
 

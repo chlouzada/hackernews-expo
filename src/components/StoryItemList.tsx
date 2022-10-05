@@ -26,6 +26,7 @@ export const StoryItemList = (props: {
           comments: props.comments,
           author: props.author,
           fromNow: date(props.createdAt),
+          points: props.score,
         })
       }
     >

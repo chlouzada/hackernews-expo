@@ -1,5 +1,10 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { Button, TouchableHighlight, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Button,
+  TouchableHighlight,
+  View,
+} from 'react-native';
 import { date } from '../utils/date';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import StyledText from '../components/StyledText';
@@ -153,13 +158,17 @@ const CommentItem = ({
   );
 };
 
-const StoryItem = ({ title, url, points, created_at, author, text }: Story) => {
+const Header = (
+  props: Omit<StoryScreenProps['route']['params'], 'text'> & {
+    text?: string;
+  }
+) => {
   const { width } = useWindowDimensions();
   return (
     <View>
-      <StyledText size="2xl" text={title} />
+      <StyledText size="2xl" text={props.title} />
 
-      {text && <Html html={text} width={width} />}
+      {props.text && <Html html={props.text} width={width} />}
 
       <View
         style={{
@@ -170,14 +179,10 @@ const StoryItem = ({ title, url, points, created_at, author, text }: Story) => {
       >
         <StyledText
           size="xs"
-          text={`${author} (${points})`}
+          text={`${props.author} (${props.points})`}
           style={{ color: '#797979' }}
         />
-        <StyledText
-          size="xs"
-          text={date(created_at)}
-          style={{ opacity: 0.4 }}
-        />
+        <StyledText size="xs" text={props.fromNow} style={{ opacity: 0.4 }} />
       </View>
     </View>
   );
@@ -192,22 +197,20 @@ const Toolbar = ({ id, title, url }: Story) => {
   );
 };
 
-type ArticleScreenProps = StackScreenProps<RootStackParamList, 'Story'>;
+type StoryScreenProps = StackScreenProps<RootStackParamList, 'Story'>;
 
-export default function StoryScreen({
-  route: {
-    params: { id, comments },
-  },
-}: ArticleScreenProps) {
+export default function StoryScreen({ route: { params } }: StoryScreenProps) {
   const [collapsed, setCollapsed] = useState<number[]>([]);
-  const { data, isLoading, isError } = trpc.hackernews.storyById.useQuery(id);
+  const { data, isLoading, isError } = trpc.hackernews.storyById.useQuery(
+    params.id
+  );
 
   const collapse = (id: number) => {
     if (collapsed.includes(id)) setCollapsed(collapsed.filter((i) => i !== id));
     else setCollapsed([...collapsed, id]);
   };
 
-  if (isError || !data) return <ErrorView />; // TODO: proper loading
+  if (isError) return <ErrorView />;
 
   return (
     <SafeAreaView>
@@ -216,10 +219,10 @@ export default function StoryScreen({
           <FlashList
             ListHeaderComponent={
               <>
-                <StoryItem {...data} />
+                <Header {...{ ...params, text: data?.text }} />
                 {/* <Toolbar {...data} /> */}
                 <View style={{ paddingBottom: 16 }} />
-                <StyledText bold>{comments} Comments</StyledText>
+                <StyledText bold>{params.comments} Comments</StyledText>
                 <View style={{ paddingBottom: 16 }} />
               </>
             }
@@ -238,6 +241,17 @@ export default function StoryScreen({
               />
             )}
           />
+          {isLoading && (
+            <ActivityIndicator
+              style={{
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                left: 0,
+                bottom: 0,
+              }}
+            />
+          )}
         </View>
       </CollapseContext.Provider>
     </SafeAreaView>

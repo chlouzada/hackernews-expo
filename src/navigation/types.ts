@@ -10,4 +10,5 @@ export interface StoryParams {
   comments: number;
   author: string;
   fromNow: string;
+  points: number;
 }

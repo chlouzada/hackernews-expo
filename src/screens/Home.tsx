@@ -16,6 +16,7 @@ import StyledText from '../components/StyledText';
 import navigation from '../navigation';
 import { inferProcedureOutput } from '@trpc/server';
 import { AppRouter } from '@chlou/hn-trpc';
+import Icon from 'react-native-vector-icons/EvilIcons';
 
 type TopStories = inferProcedureOutput<AppRouter['hackernews']['topStories']>;
 
@@ -33,17 +34,18 @@ const Header = () => {
         <StyledText bold style={{ fontSize: 30 }}>
           Top Stories
         </StyledText>
-        <TouchableHighlight onPress={() => {}}>
-          <StyledText bold style={{ padding: 8, paddingHorizontal: 16 }}>
-            Search
-          </StyledText>
+        <TouchableHighlight
+          style={{ paddingLeft: 48, paddingVertical: 12 }}
+          onPress={() => {}}
+        >
+          <Icon name="search" size={24} color="#fff" />
         </TouchableHighlight>
       </StyledView>
       <StyledView
         style={{
           marginTop: 16,
           marginBottom: 16,
-          padding: 1,
+          padding: 0.5,
           backgroundColor: '#797979',
           borderRadius: 4,
         }}

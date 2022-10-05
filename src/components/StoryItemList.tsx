@@ -24,6 +24,8 @@ export const StoryItemList = (props: {
           id: props.id,
           title: props.title,
           comments: props.comments,
+          author: props.author,
+          fromNow: date(props.createdAt),
         })
       }
     >

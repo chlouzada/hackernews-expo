@@ -1,5 +1,5 @@
-import React from "react";
-import RenderHTML from "react-native-render-html";
+import React from 'react';
+import RenderHTML from 'react-native-render-html';
 
 export const Html = React.memo(function Html({
   html,
@@ -8,21 +8,10 @@ export const Html = React.memo(function Html({
   html: string;
   width: number;
 }) {
-  // const tagsStyles = {
-  //   a: {
-  //     textDecorationLine: "none",
-  //   },
-  // };
   return (
-    // <RenderHTML
-    //   contentWidth={contentWidth}
-    //   source={{ html }}
-    //   // tagsStyles={tagsStyles}
-    // />
-
     <RenderHTML
       source={{ html }}
-      baseStyle={{ color: "white" }}
+      baseStyle={{ color: 'white' }}
       contentWidth={width}
       enableExperimentalMarginCollapsing={true}
     />

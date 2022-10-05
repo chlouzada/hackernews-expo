@@ -5,14 +5,12 @@ import {
   RefreshControl,
   TouchableHighlight,
   View,
+  Text,
 } from 'react-native';
 import { date } from '../utils/date';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import StyledText from '../components/StyledText';
 import { useWindowDimensions } from 'react-native';
-import ErrorView from '../views/ErrorView';
 import { Html } from '../components/Html';
-import { defaults } from '../styles/defaults';
 import Collapsible from 'react-native-collapsible';
 import { RootStackParamList } from '../navigation/types';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -20,6 +18,8 @@ import { FlashList } from '@shopify/flash-list';
 import { trpc } from '../utils/trpc';
 import { AppRouter } from '@chlou/hn-trpc';
 import { inferProcedureOutput } from '@trpc/server';
+import classNames from 'classnames';
+import ErrorView from '../components/ErrorView';
 
 type Story = inferProcedureOutput<AppRouter['hackernews']['storyById']>;
 type Comment = Story['children'][number];
@@ -88,58 +88,32 @@ const CommentItem = ({
     if (n === 5) return { backgroundColor: 'rgb(108, 153, 187)' };
   };
 
-  const reducedWidth =
-    (_level === -1 ? width : width - 15.6 * _level) - defaults.app.padding * 2;
+  const reducedWidth = (_level === -1 ? width : width - 15.6 * _level) - 16 * 2;
 
   return (
     <>
       <TouchableHighlight onPress={toggle} activeOpacity={1}>
         <View
-          style={[
-            {
-              display: 'flex',
-              flexDirection: 'row',
-              width: '100%',
-            },
-            isCollapsed && { paddingBottom: 12 },
-          ]}
+          className={classNames('flex flex-row w-full', {
+            'pb-4': isCollapsed,
+          })}
         >
           <View
             style={[
+              color(),
               _level != -1 && {
                 marginLeft: 10 * _level,
                 padding: 2,
                 borderRadius: 4,
                 marginRight: _level === -1 ? undefined : 8,
               },
-              color(),
-              !isCollapsed && { marginBottom: 10 },
+              !isCollapsed && { marginBottom: 4 },
             ]}
           />
-          <View
-            style={{
-              position: 'relative',
-              flex: 1,
-            }}
-          >
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                width: '100%',
-              }}
-            >
-              <StyledText
-                size="xs"
-                text={author}
-                style={{ color: '#797979' }}
-              />
-              <StyledText
-                size="xs"
-                text={date(created_at)}
-                style={{ color: '#797979' }}
-              />
+          <View className="relative grow">
+            <View className="grow flex-row justify-between w-full">
+              <Text className="font-xs text-[#797979]">{author}</Text>
+              <Text className="font-xs text-[#797979]">{date(created_at)}</Text>
             </View>
             {/* @ts-ignore */}
             <Collapsible
@@ -154,7 +128,7 @@ const CommentItem = ({
           </View>
         </View>
       </TouchableHighlight>
-      <View style={{ paddingBottom: 20 }} />
+      <View className="pb-[20px]" />
     </>
   );
 };
@@ -167,36 +141,26 @@ const Header = (
   const { width } = useWindowDimensions();
   return (
     <View>
-      <StyledText size="2xl" text={props.title} />
+      <Text className="text-2xl text-white">{props.title}</Text>
 
       {props.text && <Html html={props.text} width={width} />}
 
-      <View
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}
-      >
-        <StyledText
-          size="xs"
-          text={`${props.author} (${props.points})`}
-          style={{ color: '#797979' }}
-        />
-        <StyledText size="xs" text={props.fromNow} style={{ opacity: 0.4 }} />
+      <View className="flex flex-row justify-between">
+        <Text className="text-xs text-[#797979]">{`${props.author} (${props.points})`}</Text>
+        <Text className="text-xs text-[#797979]">{props.fromNow}</Text>
       </View>
     </View>
   );
 };
 
-const Toolbar = ({ id, title, url }: Story) => {
-  return (
-    <View style={{ flex: 1, flexDirection: 'row' }}>
-      <Button onPress={() => alert(id)} title="Id" />
-      <Button onPress={() => alert(url)} title="url" />
-    </View>
-  );
-};
+// const Toolbar = ({ id, title, url }: Story) => {
+//   return (
+//     <View style={{ flex: 1, flexDirection: 'row' }}>
+//       <Button onPress={() => alert(id)} title="Id" />
+//       <Button onPress={() => alert(url)} title="url" />
+//     </View>
+//   );
+// };
 
 type StoryScreenProps = StackScreenProps<RootStackParamList, 'Story'>;
 
@@ -215,7 +179,7 @@ export default function StoryScreen({ route: { params } }: StoryScreenProps) {
   return (
     <SafeAreaView>
       <CollapseContext.Provider value={{ collapsed, collapse }}>
-        <View style={{ height: '100%', backgroundColor: 'black' }}>
+        <View className="h-full bg-black">
           <FlashList
             refreshControl={
               <RefreshControl
@@ -227,18 +191,16 @@ export default function StoryScreen({ route: { params } }: StoryScreenProps) {
               <>
                 <Header {...{ ...params, text: data?.text }} />
                 {/* <Toolbar {...data} /> */}
-                <View style={{ paddingBottom: 16 }} />
-                <StyledText bold>{params.comments} Comments</StyledText>
-                <View style={{ paddingBottom: 16 }} />
+                <View className="pb-4" />
+                <Text className="bold">{params.comments} Comments</Text>
+                <View className="pb-4" />
               </>
             }
             estimatedItemSize={200}
             keyExtractor={(item) => item.comment.id.toString()}
-            data={
-              isLoading
-                ? []
-                : getComments(data?.children).filter((c) => c.comment.text)
-            }
+            data={getComments(data?.children ?? []).filter(
+              (c) => c.comment.text
+            )}
             renderItem={({ item }) => (
               <CommentItem
                 key={item.comment.id}
@@ -248,15 +210,7 @@ export default function StoryScreen({ route: { params } }: StoryScreenProps) {
             )}
           />
           {isLoading && (
-            <ActivityIndicator
-              style={{
-                position: 'absolute',
-                top: 0,
-                right: 0,
-                left: 0,
-                bottom: 0,
-              }}
-            />
+            <ActivityIndicator className="absolute top-0 left-0 right-0 bottom-0" />
           )}
         </View>
       </CollapseContext.Provider>

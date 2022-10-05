@@ -5,17 +5,15 @@ import {
   TextInput,
   TouchableHighlight,
   View,
+  Text,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import StyledText from '../components/StyledText';
-import LoadingView from '../views/LoadingView';
-import ErrorView from '../views/ErrorView';
 import { useDebouncedValue } from '../hooks/useDebouncedValue';
 import { StoryItemList } from '../components/StoryItemList';
-import StyledView from '../components/StyledView';
 import { trpc } from '../utils/trpc';
 import { useNavigation } from '../hooks/useNavigation';
 import Icon from 'react-native-vector-icons/Ionicons';
+import ErrorView from '../components/ErrorView';
 
 export default function SearchScreen() {
   const [query, setQuery] = useState('');
@@ -57,18 +55,17 @@ export default function SearchScreen() {
         </TouchableHighlight>
       </View>
 
-      {isLoading && <LoadingView />}
       {isError && <ErrorView />}
 
       {data ? (
         <FlatList
-          ItemSeparatorComponent={() => <View style={{ paddingBottom: 16 }} />}
+          ItemSeparatorComponent={() => <View className="pb-4" />}
           keyExtractor={(item) => item.objectID}
           data={data.hits}
           ListHeaderComponent={() => (
-            <StyledText bold style={{ padding: 16, textAlign: 'center' }}>
+            <Text className="bold p-4 text-center">
               {data.hits.length} results
-            </StyledText>
+            </Text>
           )}
           renderItem={({ item, index }) => (
             <StoryItemList
@@ -85,11 +82,11 @@ export default function SearchScreen() {
           )}
         />
       ) : (
-        <StyledView
+        <View
           style={{
             height: height - 70,
           }}
-        ></StyledView>
+        ></View>
       )}
     </SafeAreaView>
   );

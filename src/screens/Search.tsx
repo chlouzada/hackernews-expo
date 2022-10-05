@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { Dimensions, FlatList, TextInput, View } from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  TextInput,
+  TouchableHighlight,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import StyledText from '../components/StyledText';
 import LoadingView from '../views/LoadingView';
@@ -8,10 +14,13 @@ import { useDebouncedValue } from '../hooks/useDebouncedValue';
 import { StoryItemList } from '../components/StoryItemList';
 import StyledView from '../components/StyledView';
 import { trpc } from '../utils/trpc';
+import { useNavigation } from '../hooks/useNavigation';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function SearchScreen() {
   const [query, setQuery] = useState('');
   const height = Dimensions.get('window').height;
+  const navigation = useNavigation();
 
   const debounced = useDebouncedValue(query, 700);
 
@@ -24,22 +33,29 @@ export default function SearchScreen() {
 
   return (
     <SafeAreaView>
-      <TextInput
-        autoFocus
-        style={
-          {
-            width: '100%',
-            borderBottomWidth: 2,
-            padding: 10,
-            borderColor: '#e87d3e',
-            color: 'white',
-            outline: 'none',
-          } as any // ???
-        }
-        onChangeText={setQuery}
-        value={query}
-        placeholder="Search Stories"
-      />
+      <View>
+        <TextInput
+          autoFocus
+          style={
+            {
+              borderBottomWidth: 2,
+              padding: 10,
+              borderColor: '#e87d3e',
+              color: 'white',
+              outline: 'none',
+            } as any // ???
+          }
+          onChangeText={setQuery}
+          value={query}
+          placeholder="Search Stories"
+        />
+        <TouchableHighlight
+          style={{ paddingLeft: 48, paddingVertical: 12 }}
+          onPress={() => navigation.navigate('Home')}
+        >
+          <Icon name="arrow-back" size={24} color="#fff" />
+        </TouchableHighlight>
+      </View>
 
       {isLoading && <LoadingView />}
       {isError && <ErrorView />}

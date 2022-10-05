@@ -16,11 +16,13 @@ import StyledText from '../components/StyledText';
 import navigation from '../navigation';
 import { inferProcedureOutput } from '@trpc/server';
 import { AppRouter } from '@chlou/hn-trpc';
-import Icon from 'react-native-vector-icons/EvilIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '../hooks/useNavigation';
 
 type TopStories = inferProcedureOutput<AppRouter['hackernews']['topStories']>;
 
 const Header = () => {
+  const navigation = useNavigation();
   return (
     <StyledView>
       <StyledView
@@ -36,7 +38,7 @@ const Header = () => {
         </StyledText>
         <TouchableHighlight
           style={{ paddingLeft: 48, paddingVertical: 12 }}
-          onPress={() => {}}
+          onPress={() => navigation.navigate('Search')}
         >
           <Icon name="search" size={24} color="#fff" />
         </TouchableHighlight>

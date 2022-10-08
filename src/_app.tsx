@@ -8,7 +8,7 @@ export default function App() {
   return (
     <TRPCProvider>
       <SafeAreaProvider className='p-4 bg-custom-background'>
-        <StatusBar />
+        <StatusBar backgroundColor="#2e2e2e"/>
         <Navigation />
       </SafeAreaProvider>
     </TRPCProvider>

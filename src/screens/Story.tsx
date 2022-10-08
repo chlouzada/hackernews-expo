@@ -111,9 +111,9 @@ const CommentItem = ({
             ]}
           />
           <View className="relative grow">
-            <View className="grow flex-row justify-between w-full">
-              <Text className="font-xs text-[#797979]">{author}</Text>
-              <Text className="font-xs text-[#797979]">{date(created_at)}</Text>
+            <View className="flex-row justify-between">
+              <Text className="text-xs font-bold text-[#797979]">{author}</Text>
+              <Text className="text-xs font-bold text-[#797979]">{date(created_at)}</Text>
             </View>
             {/* @ts-ignore */}
             <Collapsible
@@ -140,14 +140,15 @@ const Header = (
 ) => {
   const { width } = useWindowDimensions();
   return (
-    <View>
-      <Text className="text-2xl text-white">{props.title}</Text>
+    <View className='flex gap-2'>
+      <Text className="text-2xl font-bold text-custom-orange">{props.title}</Text>
 
       {props.text && <Html html={props.text} width={width} />}
 
       <View className="flex flex-row justify-between">
-        <Text className="text-xs text-[#797979]">{`${props.author} (${props.points})`}</Text>
-        <Text className="text-xs text-[#797979]">{props.fromNow}</Text>
+        <Text className="font-bold text-xs text-custom-blue">{`${props.comments} comments - ${props.author} (${props.points})`}</Text>
+        <Text className="font-bold text-xs text-custom-blue">{``}</Text>
+        <Text className="font-bold text-xs text-custom-blue">{props.fromNow}</Text>
       </View>
     </View>
   );
@@ -177,9 +178,8 @@ export default function StoryScreen({ route: { params } }: StoryScreenProps) {
   if (isError) return <ErrorView />;
 
   return (
-    <SafeAreaView>
+    <SafeAreaView className="h-full bg-custom-background">
       <CollapseContext.Provider value={{ collapsed, collapse }}>
-        <View className="h-full bg-custom-background">
           <FlashList
             refreshControl={
               <RefreshControl
@@ -191,9 +191,7 @@ export default function StoryScreen({ route: { params } }: StoryScreenProps) {
               <>
                 <Header {...{ ...params, text: data?.text }} />
                 {/* <Toolbar {...data} /> */}
-                <View className="pb-4" />
-                <Text className="font-bold">{params.comments} Comments</Text>
-                <View className="pb-4" />
+                <View className="pb-8" />
               </>
             }
             estimatedItemSize={200}
@@ -212,7 +210,6 @@ export default function StoryScreen({ route: { params } }: StoryScreenProps) {
           {isLoading && (
             <ActivityIndicator className="absolute top-0 left-0 right-0 bottom-0" />
           )}
-        </View>
       </CollapseContext.Provider>
     </SafeAreaView>
   );

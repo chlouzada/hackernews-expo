@@ -4,14 +4,11 @@ import {
   RefreshControl,
   SafeAreaView,
   TouchableHighlight,
-  View,
+  View,Text
 } from 'react-native';
 import { StoryItemList } from '../components/StoryItemList';
 import { FlashList } from '@shopify/flash-list';
 import { trpc } from '../utils/trpc';
-import StyledText from '../components/StyledText';
-import { inferProcedureOutput } from '@trpc/server';
-import { AppRouter } from '@chlou/hn-trpc';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '../hooks/useNavigation';
 import ErrorView from '../components/ErrorView';
@@ -21,9 +18,9 @@ const Header = () => {
   return (
     <View>
       <View className="flex flex-row justify-between items-center">
-        <StyledText bold style={{ fontSize: 30 }}>
+        <Text className="font-bold text-3xl text-custom-orange">
           Top Stories
-        </StyledText>
+        </Text>
         <TouchableHighlight
           className="pl-12 py-3"
           onPress={() => navigation.navigate('Search')}
@@ -31,7 +28,7 @@ const Header = () => {
           <Icon name="search" size={24} color="#fff" />
         </TouchableHighlight>
       </View>
-      <View className="my-4 p-[0.5px] bg-[#797979] rounded" />
+      <View className="my-3" />
     </View>
   );
 };

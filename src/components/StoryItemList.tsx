@@ -31,16 +31,15 @@ export const StoryItemList = (props: {
         })
       }
     >
-      <View className="flex flex-row w-full">
-        <Text className="font-bold text-lg text-white pr-2">{props.index + 1}.</Text>
-        {/* ocupy rest of coantianer */}
-        <View className='grow'>
-          <Text className="font-bold text-lg text-white break-all">{props.title}</Text>
-          <View className="flex flex-row justify-between">
-            <Text className="font-bold text-xs text-white opacity-40">{`${props.comments ?? 0} comments (${
+      <View>
+        <Text className="font-bold  text-custom-purple pr-2">{props.index + 1}.</Text>
+        <View>
+         <Text className="font-bold text-lg text-custom-orange break-words">{props.title}</Text>
+          <View className="flex flex-row">
+            <Text className="font-bold text-xs text-custom-blue mr-auto">{`${props.comments ?? 0} comments (${
               props.score
             })`}</Text>
-            <Text className="font-bold text-xs text-white opacity-40">{date(props.createdAt)}</Text>
+            <Text className="font-bold text-xs text-custom-blue">{date(props.createdAt)}</Text>
           </View>
         </View>
       </View>

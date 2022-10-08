@@ -71,9 +71,9 @@ export default function SearchScreen() {
         data={data?.hits}
         estimatedItemSize={100}
         keyExtractor={(item) => item.objectID}
-        ListHeaderComponent={() => (
-          <Text className="text-red-700">{data?.nbHits}</Text>
-        )}
+        // ListHeaderComponent={() => (
+        //   <Text className="text-red-700">{data?.nbHits}</Text>
+        // )}
         ItemSeparatorComponent={() => <View className="pb-4" />}
         renderItem={({ item, index }) => {
           return (

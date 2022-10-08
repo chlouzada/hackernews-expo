@@ -7,7 +7,7 @@ import Navigation from './navigation';
 export default function App() {
   return (
     <TRPCProvider>
-      <SafeAreaProvider style={{ padding: 16, backgroundColor: 'black' }}>
+      <SafeAreaProvider className='p-4 bg-custom-background'>
         <StatusBar />
         <Navigation />
       </SafeAreaProvider>

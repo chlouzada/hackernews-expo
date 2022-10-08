@@ -1,9 +1,12 @@
 import React from 'react';
-import { TouchableHighlight, View } from 'react-native';
+import {
+  TouchableHighlight,
+  View,
+  Text,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import { useNavigation } from '../hooks/useNavigation';
 import { date } from '../utils/date';
-import StyledText from './StyledText';
-import StyledView from './StyledView';
 
 export const StoryItemList = (props: {
   index: number;
@@ -16,9 +19,7 @@ export const StoryItemList = (props: {
 }) => {
   const navigation = useNavigation();
   return (
-    <TouchableHighlight
-      key={props.index}
-      activeOpacity={1}
+    <TouchableWithoutFeedback
       onPress={() =>
         navigation.navigate('Story', {
           id: props.id,
@@ -30,29 +31,33 @@ export const StoryItemList = (props: {
         })
       }
     >
-      <View>
-        <StyledText bold size="sm">
-          {props.index + 1}.{' '}
-          <StyledText bold size="lg" style={{ lineHeight: 24 }}>
-            {props.title}
-          </StyledText>
-        </StyledText>
-        <StyledView flex direction="row" justifyContent="space-between">
-          <StyledText
-            bold
-            size="xs"
-            style={{ color: '#797979' }}
-            text={`${props.comments ?? 0} comments (${props.score})`}
-          />
-
-          <StyledText
-            size="xs"
-            bold
-            style={{ color: '#797979' }}
-            text={date(props.createdAt)}
-          />
-        </StyledView>
+      <View className="flex flex-row w-full">
+        <Text className="font-bold text-lg text-white pr-2">{props.index + 1}.</Text>
+        {/* ocupy rest of coantianer */}
+        <View className='grow'>
+          <Text className="font-bold text-lg text-white break-all">{props.title}</Text>
+          <View className="flex flex-row justify-between">
+            <Text className="font-bold text-xs text-white opacity-40">{`${props.comments ?? 0} comments (${
+              props.score
+            })`}</Text>
+            <Text className="font-bold text-xs text-white opacity-40">{date(props.createdAt)}</Text>
+          </View>
+        </View>
       </View>
-    </TouchableHighlight>
+    </TouchableWithoutFeedback>
   );
 };
+
+{
+  /* <View>
+<Text className="font-bold text-sm text-white">
+  {props.index + 1}. <Text className="font-bold text-lg">{props.title}</Text>
+</Text>
+<View className="flex flex-row justify-between">
+  <Text className="font-bold text-xs">{`${props.comments ?? 0} comments (${
+    props.score
+  })`}</Text>
+  <Text className="font-bold text-xs">{date(props.createdAt)}</Text>
+</View>
+</View> */
+}

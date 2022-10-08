@@ -43,7 +43,7 @@ const TopStoriesView = () => {
   if (isError) return <ErrorView />;
 
   return (
-    <View className="bg-black h-full">
+    <>
       <FlashList
         refreshControl={
           <RefreshControl
@@ -75,14 +75,13 @@ const TopStoriesView = () => {
       {isLoading && (
         <ActivityIndicator className="absolute top-0 left-0 right-0 bottom-0" />
       )}
-    </View>
+    </>
   );
 };
 
 export default function HomeScreen() {
   return (
-    <SafeAreaView>
-      {/* <StatusBar /> */}
+    <SafeAreaView  className="bg-custom-background h-full">
       <TopStoriesView />
     </SafeAreaView>
   );

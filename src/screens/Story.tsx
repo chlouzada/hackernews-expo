@@ -179,7 +179,7 @@ export default function StoryScreen({ route: { params } }: StoryScreenProps) {
   return (
     <SafeAreaView>
       <CollapseContext.Provider value={{ collapsed, collapse }}>
-        <View className="h-full bg-black">
+        <View className="h-full bg-custom-background">
           <FlashList
             refreshControl={
               <RefreshControl
@@ -192,7 +192,7 @@ export default function StoryScreen({ route: { params } }: StoryScreenProps) {
                 <Header {...{ ...params, text: data?.text }} />
                 {/* <Toolbar {...data} /> */}
                 <View className="pb-4" />
-                <Text className="bold">{params.comments} Comments</Text>
+                <Text className="font-bold">{params.comments} Comments</Text>
                 <View className="pb-4" />
               </>
             }

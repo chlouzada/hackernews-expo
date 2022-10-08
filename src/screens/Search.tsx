@@ -6,6 +6,8 @@ import {
   TouchableHighlight,
   View,
   Text,
+  RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDebouncedValue } from '../hooks/useDebouncedValue';
@@ -14,6 +16,7 @@ import { trpc } from '../utils/trpc';
 import { useNavigation } from '../hooks/useNavigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ErrorView from '../components/ErrorView';
+import { FlashList } from '@shopify/flash-list';
 
 export default function SearchScreen() {
   const [query, setQuery] = useState('');
@@ -22,15 +25,16 @@ export default function SearchScreen() {
 
   const debounced = useDebouncedValue(query, 700);
 
-  const { data, isLoading, isError } = trpc.hackernews.search.useQuery(
-    {
-      query: debounced,
-    },
-    { enabled: !!debounced }
-  );
+  const { data, isLoading, isError, refetch, isFetched } =
+    trpc.hackernews.search.useQuery(
+      {
+        query: debounced,
+      },
+      { enabled: !!debounced }
+    );
 
   return (
-    <SafeAreaView>
+    <SafeAreaView className="bg-custom-background h-full">
       <View>
         <TextInput
           autoFocus
@@ -57,17 +61,22 @@ export default function SearchScreen() {
 
       {isError && <ErrorView />}
 
-      {data ? (
-        <FlatList
-          ItemSeparatorComponent={() => <View className="pb-4" />}
-          keyExtractor={(item) => item.objectID}
-          data={data.hits}
-          ListHeaderComponent={() => (
-            <Text className="bold p-4 text-center">
-              {data.hits.length} results
-            </Text>
-          )}
-          renderItem={({ item, index }) => (
+      <FlashList
+        refreshControl={
+          <RefreshControl
+            refreshing={isLoading && !!debounced}
+            onRefresh={refetch}
+          />
+        }
+        data={data?.hits}
+        estimatedItemSize={100}
+        keyExtractor={(item) => item.objectID}
+        ListHeaderComponent={() => (
+          <Text className="text-red-700">{data?.nbHits}</Text>
+        )}
+        ItemSeparatorComponent={() => <View className="pb-4" />}
+        renderItem={({ item, index }) => {
+          return (
             <StoryItemList
               {...{
                 index,
@@ -79,15 +88,12 @@ export default function SearchScreen() {
                 id: item.story_id,
               }}
             />
-          )}
-        />
-      ) : (
-        <View
-          style={{
-            height: height - 70,
-          }}
-        ></View>
-      )}
+          );
+        }}
+      />
+      {/* {isLoading && (
+        <ActivityIndicator className="absolute top-0 left-0 right-0 bottom-0" />
+      )} */}
     </SafeAreaView>
   );
 }
